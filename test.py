@@ -3,32 +3,32 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait as wait
 from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
-import sys
-import urllib.request
-import os
 
 url = "https://www.aliexpress.com/item/4000970644013.html?spm=a2g0o.productlist.0.0.73b9753eiOZcbh&algo_pvid=d0bdb248-24cd-434f-af4d-fb4d49b6f651&algo_expid=d0bdb248-24cd-434f-af4d-fb4d49b6f651-10&btsid=0ab6d69f15919610188667793e70a0&ws_ab_test=searchweb0_0,searchweb201602_,searchweb201603_"
 # url="https://www.aliexpress.com/item/4000970644013.html?spm=a2g0o.productlist.0.0.73b9753eiOZcbh&algo_pvid=d0bdb248-24cd-434f-af4d-fb4d49b6f651&algo_expid=d0bdb248-24cd-434f-af4d-fb4d49b6f651-10&btsid=0ab6d69f15919610188667793e70a0&ws_ab_test=searchweb0_0,searchweb201602_,searchweb201603_"
 # url="https://www.aliexpress.com/item/4000103365480.html?spm=a2g01.12617084.fdpcl001.1.2d54jCb7jCb7mn&gps-id=5547572&scm=1007.19201.130907.0&scm_id=1007.19201.130907.0&scm-url=1007.19201.130907.0&pvid=a934229c-22a1-4e1e-8b3f-901c2b5ae23f";
+
+# -------------HouseKeeping-----------
 driver = webdriver.Chrome(ChromeDriverManager().install())
 driver.set_window_position(0, 0)
 driver.set_window_size(1920, 1024)
 driver.get(url)
+# -------------HouseKeeping-----------
 
 price = driver.find_element_by_class_name('product-price-value')
 title = driver.find_element_by_class_name('product-title-text')
 store = driver.find_element_by_class_name('store-name')
 images = driver.find_elements_by_xpath('//div[@class="images-view-item"]/img')
-
 list_of_sku = driver.find_elements_by_class_name('sku-property')
-
 list_of_pictures = []
-
+# --------------To close the POP-UPBOX---------------
 try:
     wait(driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, "next-dialog-body")))
 except:
     print("No POPUP Detected")
 driver.find_element_by_class_name("next-dialog-close").click()
+# --------------To close the POP-UPBOX---------------
+
 
 # folder Creation to download pictures.
 # dir_for_images = 'Downloaded_Images/' + store.text + "/"
@@ -73,7 +73,6 @@ for key, _ in enumerate(sku_properties):
         for index, color in enumerate(colors):
             src = str(index) + ":" + color.get_attribute("src")
             property_values.setdefault(element.text, []).append(src)
-
 
     elif element.text == "Ships From:":
         shipping = driver.find_elements_by_xpath(xpath3)
