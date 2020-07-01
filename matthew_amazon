@@ -45,3 +45,11 @@ for size in sizes:
 
 for color in colors:
     print(color.get_attribute('alt'))
+
+
+description = driver.find_element_by_id("productDescription")
+print ("DESCRIPTION: "+ description.text)
+
+
+Item_specifics = driver.find_element_by_id("detailBullets")
+print ("ITEM_SPECIFICS:  "+Item_specifics.text)
