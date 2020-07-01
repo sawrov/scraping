@@ -53,3 +53,6 @@ print ("DESCRIPTION: "+ description.text)
 
 Item_specifics = driver.find_element_by_id("detailBullets")
 print ("ITEM_SPECIFICS:  "+Item_specifics.text)
+
+ship = driver.find_element_by_id("fast-track-message")
+print ("SHIP: "+ship.text)
