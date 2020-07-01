@@ -25,6 +25,7 @@ def scrape(url):
     title = driver.find_element_by_class_name('product-title-text')
     store = driver.find_element_by_class_name('store-name')
     images = driver.find_elements_by_xpath('//div[@class="images-view-item"]/img')
+    qty = driver.find_element_by_class_name("product-quantity-tip")
     list_of_sku = driver.find_elements_by_class_name('sku-property')
     list_of_pictures = []
     # --------------To close the POP-UPBOX---------------
@@ -50,6 +51,7 @@ def scrape(url):
     print("Price: " + price.text + "\n")
     print("TITLE: " + title.text + "\n")
     print("SELLER: " + store.text + "\n")
+    print("QUANTITY: "+ qty.text + "\n")
     # no_of_item = 0
 
     print("-------IMAGES-----------")
@@ -112,6 +114,7 @@ def scrape(url):
     if shipping_flag == 0:
         print("\nSHIPPING INFO")
         print(driver.find_element_by_class_name("product-shipping").text)
+
     print("---------------DESCRIPTION------------------")
     i = 200
     description = ""
@@ -134,6 +137,16 @@ def scrape(url):
         print("UNABLE TO EXTRACT DESCRIPTION:: WORKING ON IT. PLEASE REPORT THIS LINK TO YOUR PROVIDER")
 
     print("---------------END OF DESCRIPTION------------------")
+    print("---------------IMAGES IN DESCRIPTION------------------")
+
+    print("IMAGES IN THE DESCRIPTION")
+    try:
+        desc_img = driver.find_elements_by_class_name("desimg")
+        for img in desc_img:
+            print(img.get_attribute("src"))
+    except:
+        print("NO IMAGES FOUND IN DESCRIPTION")
+    print("---------------END IMAGES IN DESCRIPTION------------------")
 
     # print(items.get_attribute("src"))
     # Code for except block
@@ -143,6 +156,13 @@ def scrape(url):
 
 
 # ----------Read-from-text-file------------
+# with open("aliexpressurl.txt") as links:
+#     urls = links.readlines()
+#     for url in urls:
+#         scrape(url)
+
+
+
 try:
     with open("aliexpressurl.txt") as links:
         urls = links.readlines()
