@@ -1,84 +1,55 @@
+from typing import List
 from selenium import webdriver
-from webdriver_manager.chrome import ChromeDriverManager
-
-chrome_path = r"C:\Users\be\OneDrive\Desktop\chromedriver.exe"
-#driver = webdriver.Chrome()
-driver = webdriver.Chrome(ChromeDriverManager().install())
-
-driver.get("https://www.amazon.com/Brooks-Mens-Ghost-Biking-Black/dp/B07L6KNJZV/ref=sr_1_8?dchild=1&keywords=shoes&qid=1592311675&sr=8-8")
-from selenium.webdriver.support.ui import Select
-from selenium.webdriver.support.ui import WebDriverWait as wait
-from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
+from selenium.webdriver.remote.webelement import WebElement
+from selenium.webdriver.support.ui import Select
+import urllib.request
+import os
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.action_chains import ActionChains
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+import os
 
 
+chrome_path = r"C:\Users\bezz\OneDrive\Desktop\chromedriver.exe"
+driver = webdriver.Chrome()
+driver.get("https://www.amazon.com/gp/slredirect/picassoRedirect.html/ref=pa_sp_atf_aps_sr_pg1_2?ie=UTF8&adId=A02501902AOXJGM6M0M17&url=%2FKikiz-Little-Girls-Princess-Dress%2Fdp%2FB07HYLD2RX%2Fref%3Dsr_1_2_sspa%3Fdchild%3D1%26keywords%3Dshoes%26qid%3D1593419826%26sr%3D8-2-spons%26psc%3D1&qualifier=1593419826&id=91573959604539&widgetName=sp_atf")
 
 
-
-
-
+#https://www.amazon.com/Brooks-Mens-Ghost-Biking-Black/dp/B07L6KNJZV/ref=sr_1_8?dchild=1&keywords=shoes&qid=1592311675&sr=8-8
+#https://www.amazon.com/gp/product/B07NW8KZDP/ref=ox_sc_act_title_1?smid=A2MFDWVXXXFG9H&th=1&psc=1
 
 title = driver.find_element_by_id('productTitle')
-print("TITLE: "+title.text)
+print("TITLE: " + title.text)
 
-price = driver.find_element_by_id('unifiedPrice_feature_div')
-print("PRICE: "+price.text)
-price = driver.find_element_by_id('desktop_unifiedPrice')
-print("PRICE: "+price.text)
-price = driver.find_element_by_id('price')
-print("PRICE: "+price.text)
-price = driver.find_element_by_id('priceblock_ourprice')
-print("PRICE: "+price.text)
-price=driver.find_element_by_xpath('//SPAN[@id="priceblock_ourprice"]')
-print("PRICE: "+price.text)
+#1 price to fectch "deal_price" confirm path first 
+price = driver.find_element_by_xpath('//SPAN[@id="priceblock_ourprice"]')
+print("PRICE: " + price.text)
 
 
+size_button = driver.find_element_by_xpath('//*[@id="dropdown_selected_size_name"]/span').click()
+
+sizes = driver.find_elements_by_xpath("//ul[@class='a-nostyle a-list-link']/li/a[@class='a-dropdown-link']")
+
+colors = driver.find_elements_by_xpath("//ul[@role='radiogroup']//img")
+
+for size in sizes:
+    print(size.text + "\t")
+
+for color in colors:
+    print(color.get_attribute('alt'))
 
 
+description = driver.find_element_by_id("productDescription")
+print ("DESCRIPTION: "+ description.text)
 
 
-
-
-###working code###
-
-#select size add 2 cart
-
-#select = Select(driver.find_element_by_id("native_dropdown_selected_size_name"))
-#select.select_by_visible_text("8")
-#wait(driver, 5).until(EC.element_to_be_clickable((By.XPATH, '//input[@id="add-to-cart-button" and not(@style="cursor: not-allowed;")]'))).click()
-
-
-
-
-
-
-select = Select(driver.find_element_by_id("native_dropdown_selected_size_name"))
-select.select_by_visible_text("7")
-#wait(driver, 5).until(EC.element_to_be_clickable((By.XPATH, '//input[@id="add-to-cart-button" and not(@style="cursor: not-allowed;")]'))).click()
-
-
-
-
-select = Select(driver.find_element_by_id("native_dropdown_selected_size_name"))
-select.select_by_visible_text("8")
-#wait(driver, 5).until(EC.element_to_be_clickable((By.XPATH, '//input[@id="add-to-cart-button" and not(@style="cursor: not-allowed;")]'))).click()
-
-
-
-select = Select(driver.find_element_by_id("native_dropdown_selected_size_name"))
-select.select_by_visible_text("8.5")
-#wait(driver, 5).until(EC.element_to_be_clickable((By.XPATH, '//input[@id="add-to-cart-button" and not(@style="cursor: not-allowed;")]'))).click()
-
-
-
-select = Select(driver.find_element_by_id("native_dropdown_selected_size_name"))
-select.select_by_visible_text("9")
-#wait(driver, 5).until(EC.element_to_be_clickable((By.XPATH, '//input[@id="add-to-cart-button" and not(@style="cursor: not-allowed;")]'))).click()
-
-
-
-#quantity
-
-
-#select = Select(driver.find_element_by_id("quantity"))
-#select.select_by_visible_text("5")
+Item_specifics = driver.find_element_by_id("detailBullets")
+print ("ITEM_SPECIFICS:  "+Item_specifics.text)
