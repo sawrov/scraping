@@ -64,3 +64,13 @@ print("SHIP_TO:"+ship_to.text)
 
 currency = driver.find_element_by_xpath('//*[@id="cerberus-data-metrics"]')
 print (currency.get_attribute("data-asin-currency-code")) 
+
+
+
+#find attribute for ship all countries path works to attribute but cant find attribute/work in progress/
+
+AllSHIPCountries = driver.find_element_by_id("contextualIngressPtLabel_deliveryShortLine").click()
+SHIPCountries = driver.find_elements_by_id("GLUXCountryList")
+
+for AllSHIPCountries in  SHIPCountries:
+    print(AllSHIPCountries.get_attribute("   "))         ####Find Attribute####  
