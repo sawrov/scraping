@@ -60,3 +60,7 @@ print ("SHIP: "+ship.text)
 
 ship_to = driver.find_element_by_xpath('//*[@id="contextualIngressPtLabel_deliveryShortLine"]/span[2]')
 print("SHIP_TO:"+ship_to.text)
+
+
+currency = driver.find_element_by_xpath('//*[@id="cerberus-data-metrics"]')
+print (currency.get_attribute("data-asin-currency-code"))
