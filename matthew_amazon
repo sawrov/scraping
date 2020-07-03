@@ -70,7 +70,8 @@ print (currency.get_attribute("data-asin-currency-code"))
 #find attribute for ship all countries path works to attribute but cant find attribute/work in progress/
 
 AllSHIPCountries = driver.find_element_by_id("contextualIngressPtLabel_deliveryShortLine").click()
-SHIPCountries = driver.find_elements_by_id("GLUXCountryList")
+#SHIPCountries = driver.find_elements_by_id("GLUXCountryList")
+SHIPCountries = driver.find_elements_by_class_name('a-dropdown-link')
 
 for AllSHIPCountries in  SHIPCountries:
     print(AllSHIPCountries.get_attribute("   "))         ####Find Attribute####  
