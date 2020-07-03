@@ -4,6 +4,8 @@ from selenium.webdriver.support.ui import WebDriverWait as wait
 from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
 import re
+import time
+
 
 # url="https://www.aliexpress.com/item/4000970644013.html?spm=a2g0o.productlist.0.0.73b9753eiOZcbh&algo_pvid=d0bdb248-24cd-434f-af4d-fb4d49b6f651&algo_expid=d0bdb248-24cd-434f-af4d-fb4d49b6f651-10&btsid=0ab6d69f15919610188667793e70a0&ws_ab_test=searchweb0_0,searchweb201602_,searchweb201603_"
 # url="https://www.aliexpress.com/item/4000970644013.html?spm=a2g0o.productlist.0.0.73b9753eiOZcbh&algo_pvid=d0bdb248-24cd-434f-af4d-fb4d49b6f651&algo_expid=d0bdb248-24cd-434f-af4d-fb4d49b6f651-10&btsid=0ab6d69f15919610188667793e70a0&ws_ab_test=searchweb0_0,searchweb201602_,searchweb201603_"
@@ -17,7 +19,6 @@ def scrape(url):
     driver.set_window_size(1920, 1024)
 
     # -------------HouseKeeping-----------
-
 
     driver.get(url)
 
@@ -46,26 +47,21 @@ def scrape(url):
     # dir_for_images = 'Downloaded_Images/' + store.text + "/"
     # os.makedirs(os.path.dirname(dir_for_images), exist_ok=True)
 
-
     print("-------------------INFORMATION-------------------")
     print("Price: " + price.text + "\n")
     print("TITLE: " + title.text + "\n")
     print("SELLER: " + store.text + "\n")
-    print("QUANTITY: "+ qty.text + "\n")
-    # no_of_item = 0
+    print("QUANTITY: " + qty.text + "\n")
 
     print("-------IMAGES-----------")
     for items in images:
         links = (items.get_attribute('src'))
         links = links.replace(".jpg_50x50", "")
-        # urllib.request.urlretrieve(links, dir_for_images + str(no_of_item))
-        # saving this is an array.
         list_of_pictures.append(links)
         print(links)
-        # no_of_item += 1
 
     # Clear Exif Data HERE
-    print("-------IMAGES-----------")
+    print("-------END-IMAGES-----------")
 
     print("------------VARIATIONS-------------")
 
@@ -73,6 +69,8 @@ def scrape(url):
 
     sku_properties = driver.find_elements_by_xpath("//div[@class='sku-wrap']/div[@class='sku-property']")
     property_values = dict()
+    colors = []
+    sizes = []
     for key, _ in enumerate(sku_properties):
         xpath2 = "//div[@class='sku-wrap']/div[@class='sku-property'][" + str(key + 1) + "]/div"
         element = driver.find_element_by_xpath(xpath2)
@@ -94,23 +92,34 @@ def scrape(url):
                 ship.click()
                 elm = wait(driver, 10).until(
                     EC.presence_of_element_located((By.XPATH, "//span[@class='product-shipping-info black-link']")))
+                time.sleep(1)
                 shipping_info = driver.find_element_by_class_name("product-shipping").text
                 property_values.setdefault(element.text, [ship.text]).append(shipping_info)
         elif element.text == "Size:":
             sizes = driver.find_elements_by_xpath(xpath3)
+            size_flag = 1
             for size in sizes:
                 property_values.setdefault(element.text, []).append(size.text)
 
-    for check in property_values:
+    # GET ALL VARIATIONS IN SIZE AND COLORS------------------------
+    if size_flag == 1 and color_flag == 1:
+        for color in colors:
+            color.click()
+            for size in sizes:
+                size.click()
+                time.sleep(0.5)
+                print(color.get_attribute("title") + "--" + size.text + ":" + driver.find_element_by_class_name(
+                    'product-price-value').text+"--->"+driver.find_element_by_class_name("product-quantity-tip").text)
+    # GET ALL VARIATION IN SIZE AND COLORS------------------
 
+    # Displaying all the information
+    for check in property_values:
         print(check)
         print('-----------')
-
         for values in property_values[check]:
             print(values)
         print("\n")
         print("---------------")
-
     if shipping_flag == 0:
         print("\nSHIPPING INFO")
         print(driver.find_element_by_class_name("product-shipping").text)
@@ -139,7 +148,6 @@ def scrape(url):
     print("---------------END OF DESCRIPTION------------------")
     print("---------------IMAGES IN DESCRIPTION------------------")
 
-    print("IMAGES IN THE DESCRIPTION")
     try:
         desc_img = driver.find_elements_by_class_name("desimg")
         for img in desc_img:
@@ -152,7 +160,7 @@ def scrape(url):
     # Code for except block
     # print(sys.exc_info()[0])
     driver.quit()
-    #input("Press the <ENTER> key to continue...")
+    # input("Press the <ENTER> key to continue...")
 
 
 # ----------Read-from-text-file------------
@@ -160,7 +168,6 @@ def scrape(url):
 #     urls = links.readlines()
 #     for url in urls:
 #         scrape(url)
-
 
 
 try:
