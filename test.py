@@ -5,6 +5,8 @@ from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
 import re
 import time
+from array import *
+import numpy as np
 
 
 # url="https://www.aliexpress.com/item/4000970644013.html?spm=a2g0o.productlist.0.0.73b9753eiOZcbh&algo_pvid=d0bdb248-24cd-434f-af4d-fb4d49b6f651&algo_expid=d0bdb248-24cd-434f-af4d-fb4d49b6f651-10&btsid=0ab6d69f15919610188667793e70a0&ws_ab_test=searchweb0_0,searchweb201602_,searchweb201603_"
@@ -102,16 +104,24 @@ def scrape(url):
                 property_values.setdefault(element.text, []).append(size.text)
 
     # GET ALL VARIATIONS IN SIZE AND COLORS------------------------
+    size_color_matrix = np.zeros(shape=(len(colors), len(sizes)), dtype=object)
     if size_flag == 1 and color_flag == 1:
-        for color in colors:
+        for i, color in enumerate(colors):
             color.click()
-            for size in sizes:
-                size.click()
-                time.sleep(0.5)
-                print(color.get_attribute("title") + "--" + size.text + ":" + driver.find_element_by_class_name(
-                    'product-price-value').text+"--->"+driver.find_element_by_class_name("product-quantity-tip").text)
-    # GET ALL VARIATION IN SIZE AND COLORS------------------
+            for j, size in enumerate(sizes):
+                try:
+                    size.click()
+                    time.sleep(0.1)
+                # print(driver.find_element_by_class_name('product-price-value').text)
+                    size_color_matrix[i][j] = driver.find_element_by_class_name('product-price-value').text+"("+re.sub('\spieces available\s','',driver.find_element_by_class_name("product-quantity-tip").text)+")"
+                # print(color.get_attribute("title") + "--" + size.text + ":" + driver.find_element_by_class_name(
+                #     'product-price-value').text + "--->" + driver.find_element_by_class_name(
+                #     "product-quantity-tip").text)
+                except:
+                    continue
+        print(size_color_matrix)
 
+    # GET ALL VARIATION IN SIZE AND COLORS------------------
     # Displaying all the information
     for check in property_values:
         print(check)
@@ -164,22 +174,22 @@ def scrape(url):
 
 
 # ----------Read-from-text-file------------
-# with open("aliexpressurl.txt") as links:
-#     urls = links.readlines()
-#     for url in urls:
-#         scrape(url)
+with open("aliexpressurl.txt") as links:
+    urls = links.readlines()
+    for url in urls:
+        scrape(url)
 
-
-try:
-    with open("aliexpressurl.txt") as links:
-        urls = links.readlines()
-        for url in urls:
-            scrape(url)
-except:
-    print("\n\n\n\n")
-    print("MAKE SURE THE FILE NAME IS aliexpressurl.txt")
-    print("MAKE SURE IT IS IN THE SAME DIRECTORY")
-    print("CHECK THE URL ENTERED")
+#
+# try:
+#     with open("aliexpressurl.txt") as links:
+#         urls = links.readlines()
+#         for url in urls:
+#             scrape(url)
+# except:
+#     print("\n\n\n\n")
+#     print("MAKE SURE THE FILE NAME IS aliexpressurl.txt")
+#     print("MAKE SURE IT IS IN THE SAME DIRECTORY")
+#     print("CHECK THE URL ENTERED")
 quit()
 
 # ----------Read-from-text-file------------
