@@ -14,11 +14,33 @@ def scrape(url):
     driver.get(url)
 
 
-#******WORK IN PROGRESS******
 # exif data image clean code
 # exif code here
 # exif = image clean
-#******WORK IN PROGRESS******
+
+
+
+#PROUCT_PRICE_set RULE
+
+    #       price = driver.find_element_by_xpath('//SPAN[@id="priceblock_ourprice"]')
+    #       print("PRICE: " + price.text)
+    #       PRODUCT_PRICE _SET _RULE = "$ &/or %"  (SET UP TXT. INPUT $Or% Or both $+%)
+    #       price = product_price
+    #       print = price + product_price_set_rule = "product_price"
+
+
+
+#SHIP_PRICE_set RULE
+
+    #       ship = driver.find_element_by_id("fast-track-message")
+    #       print ("SHIP: "+ship.text)
+    #       SHIP_PRICE _SET _RULE = "$ &/or %"  (SET UP TXT. INPUT $Or% Or both $+%)
+    #       price = product_price
+    #       price + ship_price_set_rule = "ship_price"
+
+
+#cron job to update every min/hour/day/week
+    #set up a txt.file to update as you select min/hour/day/week/
 
 
     title = driver.find_element_by_id('productTitle')
@@ -42,6 +64,7 @@ def scrape(url):
 #******WORK IN PROGRESS****** (need to find for all countries not just one) this grabs a note availibility dont loose it use it.
     ship_to = driver.find_element_by_xpath('//*[@id="contextualIngressPtLabel_deliveryShortLine"]/span[2]')
     print("SHIP_TO:"+ship_to.text)
+    
 # ******WORK IN PROGRESS******
     availability = driver.find_element_by_ID("availability")
     print("Availability:   "+availability.text)
@@ -67,15 +90,10 @@ def scrape(url):
 
 
 
-#******TEST CODE BELOW******
 
 
-#******TEST CODE ABOVE******
 
-
-#*****ALL TESTED WROKING CODE BELOW*******
-
-#####SIZE COLOR WORKING#####
+#SIZE COLOR WORKING
     #    for size in sizes:
     #        print(size.text + "\t")
 
@@ -84,19 +102,12 @@ def scrape(url):
 
     # GET ALL VARIATIONS IN SIZE AND COLORS------------------------
 
-#####SIZE COLOR WORKING#####
+#SIZE COLOR WORKING
 
 
 
 
-
-# *****WROKING CODE ABOVE*******
-
-
-
-
-
-#BELLOW IS CODE AND NOTES (WORKING ON IT)
+#**********BELLOW IS CODE AND NOTES (WORKING ON IT)
 
 
 #AllSHIPCountries = driver.find_element_by_id("contextualIngressPtLabel_deliveryShortLine").click()
@@ -106,17 +117,13 @@ def scrape(url):
 #SHIPCountries = driver.find_elements_by_class_name('a-dropdown-item')
 #SHIPCountries = driver.find_element_by_xpath('//a[@class="a-dropdown-link"]')
 
-
 #print ("SHIPCOUNTRIES:   "+SHIPCountries + '\t')
 
 #for ALLSHIPCountries in SHIPCountries:
 #print (ALLSHIPCountries.get_attribute('/a'))
 
 
-
-
 #/a    /id/class/a/li/span
-
 #//a[@class="a-dropdown-link"]      xpath all countries
 #SHIPCountries = driver.find_elements_by_class_name('a-dropdown-item')
 #SHIPCountries = driver.find_elements_by_class_name('a-dropdown-link')
@@ -126,7 +133,7 @@ def scrape(url):
 
 
 
-    # ----------Read-from-text-file------------
+# ----------Read-from-text-file------------
     # with open("aliexpressurl.txt") as links:
     #     urls = links.readlines()
     #     for url in urls:
