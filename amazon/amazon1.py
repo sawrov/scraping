@@ -59,12 +59,12 @@ def scrape(url):
 #******WORK IN PROGRESS****************************************************************************************
     #ship_price =    this is used for ship price set rule
 
-    #short_description = driver.find_element_by_id("productDescription")
-    #print ("DESCRIPTION: "+ description.text)
-
 #******WORK IN PROGRESS****************************************************************************************
     #full_decripton = driver
-    print (info attribute full description)
+    #print (info attribute full description)
+    
+    short_description = driver.find_element_by_id("productDescription")
+    print ("SHORTDESCRIPTION: "+ short_description.text)
 
     Item_specifics = driver.find_element_by_id("detailBullets")
     print ("ITEM_SPECIFICS:  " +Item_specifics.text)
@@ -77,7 +77,7 @@ def scrape(url):
     print("SHIP_TO:"+ship_to.text)
 
 #******WORK IN PROGRESS******
-    availability = driver.find_element_by_ID("availability")*********************************************************************8
+    availability = driver.find_element_by_ID("availability")***********************************was working ????
     print("Availability:   "+availability.text)
 
 #******WORK IN PROGRESS******      ****************************************************************************************************************************
@@ -98,33 +98,6 @@ def scrape(url):
                 time.sleep(0.5)
                 print(color.get_attribute("alt") + "--" + size.text + ":" + driver.find_element_by_xpath(
                 "//ul[@class='a-nostyle a-list-link']/li/a[@class='a-dropdown-link']").text+"--->"+driver.find_element_by_id("availability"))
-
-    # find attribute for ship all countries path works to attribute but cant find attribute/work in progress/********************************************attribute issue why?**
-
-    AllSHIPCountries = driver.find_element_by_id("contextualIngressPtLabel_deliveryShortLine").click()
-    # SHIPCountries = driver.find_elements_by_id("GLUXCountryList")
-    SHIPCountries = driver.find_elements_by_class_name('a-dropdown-link')
-
-    for AllSHIPCountries in SHIPCountries:
-        print(AllSHIPCountries.get_attribute("   "))  ####Find Attribute####
-
-
-
-
-
-    driver.quit()
-
-
-
-
-
-
-
-                #******WORK IN PROGRESS******
-
-
-
-
 
 
 #SIZE COLOR WORKING
@@ -147,29 +120,22 @@ def scrape(url):
 
 
 
-#**********BELLOW IS CODE AND NOTES (WORKING ON IT)
+#SHIPPING
+# find attribute for ship all countries path works to attribute but cant find attribute/work in progress/********************************************attribute issue why?**
+    
+    
+    AllSHIPCountries = driver.find_element_by_id("contextualIngressPtLabel_deliveryShortLine").click()
+    # SHIPCountries = driver.find_elements_by_id("GLUXCountryList")
+    SHIPCountries = driver.find_elements_by_class_name('a-dropdown-link')
 
-
-#AllSHIPCountries = driver.find_element_by_id("contextualIngressPtLabel_deliveryShortLine").click()
-#SHIPCountries = driver.find_elements_by_id("GLUXCountryList")
-#SHIPCountries = driver.find_elements_by_class_name('a-dropdown-link')
-#SHIPCountries = driver.find_element_by_xpath()
-#SHIPCountries = driver.find_elements_by_class_name('a-dropdown-item')
-#SHIPCountries = driver.find_element_by_xpath('//a[@class="a-dropdown-link"]')
-
-#print ("SHIPCOUNTRIES:   "+SHIPCountries + '\t')
-
-#for ALLSHIPCountries in SHIPCountries:
-#print (ALLSHIPCountries.get_attribute('/a'))
-
-
-#/a    /id/class/a/li/span
-#//a[@class="a-dropdown-link"]      xpath all countries
-#SHIPCountries = driver.find_elements_by_class_name('a-dropdown-item')
-#SHIPCountries = driver.find_elements_by_class_name('a-dropdown-link')
+    for AllSHIPCountries in SHIPCountries:
+        print(AllSHIPCountries.get_attribute("   "))  ####Find Attribute####
 
 
 
+
+
+    driver.quit()
 
 
 
