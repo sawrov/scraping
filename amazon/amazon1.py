@@ -14,23 +14,24 @@ def scrape(url):
 
     driver.get(url)
 
-
+    
+#******WORK IN PROGRESS****************************************************************************************
 # exif data image clean code
 # exif code here
 # exif = image clean
 
 
-
+#******WORK IN PROGRESS****************************************************************************************
 #PROUCT_PRICE_set RULE
 
-    #       price = driver.find_element_by_xpath('//SPAN[@id="priceblock_ourprice"]')
-    #       print("PRICE: " + price.text)
-    #       PRODUCT_PRICE _SET _RULE = product_price + "$ &/or %"  (SET UP TXT. INPUT $Or% Or both $+%)*******************************
+    #       product_price = driver.find_element_by_xpath('//SPAN[@id="priceblock_ourprice"]')
+    #       print("PRODUCTPRICE: " + product_price.text)
+    #       PRODUCT_PRICE_SET_RULE = product_price + "$ &/or %"  (SET UP TXT. INPUT $Or% Or both $+%)*******************************
     #       print(PRODUCT_PRICE _SET _RULE:   "+PRODUCT_PRICE _SET _RULE.text
     
 
-
-
+    
+#******WORK IN PROGRESS****************************************************************************************
 #SHIP_PRICE_set RULE
 
     #       ship_to = driver.find_element_by_xpath('//*[@id="contextualIngressPtLabel_deliveryShortLine"]/span[2]')
@@ -40,8 +41,9 @@ def scrape(url):
     
 
 
-#cron job to update every min/hour/day/week
-    #set up a txt.file to update as you select min/hour/day/week/***************************
+#cron job to update every min/hour/day/week #******WORK IN PROGRESS****************************************************************************************
+    #set up a txt.file to update as you select min/hour/day/week/   
+    #create cron job to run
 
 #images from product page*****************************************************************
     
@@ -54,10 +56,15 @@ def scrape(url):
     product_price = driver.find_element_by_xpath('//SPAN[@id="priceblock_ourprice"]')
     print("PRICE: " + price.text)
     
-    #ship_price =    this is used for ship price set rule********************************************************************
+#******WORK IN PROGRESS****************************************************************************************
+    #ship_price =    this is used for ship price set rule
 
-    description = driver.find_element_by_id("productDescription")
+    short_description = driver.find_element_by_id("productDescription")
     print ("DESCRIPTION: "+ description.text)
+
+#******WORK IN PROGRESS****************************************************************************************
+    #full_decripton = driver
+    print (info attribute full description)
 
     Item_specifics = driver.find_element_by_id("detailBullets")
     print ("ITEM_SPECIFICS:  " +Item_specifics.text)
