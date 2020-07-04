@@ -1,5 +1,6 @@
 from selenium import webdriver
 from webdriver_manager.chrome import ChromeDriverManager
+import time
 import re
 
 def scrape(url):
@@ -24,33 +25,36 @@ def scrape(url):
 
     #       price = driver.find_element_by_xpath('//SPAN[@id="priceblock_ourprice"]')
     #       print("PRICE: " + price.text)
-    #       PRODUCT_PRICE _SET _RULE = "$ &/or %"  (SET UP TXT. INPUT $Or% Or both $+%)
-    #       price = product_price
-    #       print = price + product_price_set_rule = "product_price"
+    #       PRODUCT_PRICE _SET _RULE = product_price + "$ &/or %"  (SET UP TXT. INPUT $Or% Or both $+%)*******************************
+    #       print(PRODUCT_PRICE _SET _RULE:   "+PRODUCT_PRICE _SET _RULE.text
+    
 
 
 
 #SHIP_PRICE_set RULE
 
-    #       ship = driver.find_element_by_id("fast-track-message")
-    #       print ("SHIP: "+ship.text)
-    #       SHIP_PRICE _SET _RULE = "$ &/or %"  (SET UP TXT. INPUT $Or% Or both $+%)
-    #       price = product_price
-    #       price + ship_price_set_rule = "ship_price"
+    #       ship_to = driver.find_element_by_xpath('//*[@id="contextualIngressPtLabel_deliveryShortLine"]/span[2]')
+    #       print("SHIP_TO:"+ship_to.text)  (must get ship price not ship country this only example.....)***************************
+    #       SHIP_PRICE_SET_RULE = ship_price + "$ &/or %"  (SET UP TXT. INPUT $Or% Or both $+%)*************************************
+    #       print"SHIP_PRICE_SET_RULE:   "+SHIP_PRICE _SET _RULE.text
+    
 
 
 #cron job to update every min/hour/day/week
-    #set up a txt.file to update as you select min/hour/day/week/
+    #set up a txt.file to update as you select min/hour/day/week/***************************
 
-
+#images from product page*****************************************************************
+    
     title = driver.find_element_by_id('productTitle')
     print("TITLE: " + title.text)
 
     currency = driver.find_element_by_xpath('//*[@id="cerberus-data-metrics"]')
     print("CURRENCY:  " + currency.get_attribute("data-asin-currency-code"))
 
-    price = driver.find_element_by_xpath('//SPAN[@id="priceblock_ourprice"]')
+    product_price = driver.find_element_by_xpath('//SPAN[@id="priceblock_ourprice"]')
     print("PRICE: " + price.text)
+    
+    #ship_price =    this is used for ship price set rule********************************************************************
 
     description = driver.find_element_by_id("productDescription")
     print ("DESCRIPTION: "+ description.text)
@@ -61,32 +65,57 @@ def scrape(url):
     ship = driver.find_element_by_id("fast-track-message")
     print ("SHIP: "+ship.text)
 
-#******WORK IN PROGRESS****** (need to find for all countries not just one) this grabs a note availibility dont loose it use it.
+#******WORK IN PROGRESS****** (need to find for all countries not just one) this grabs a note availibility dont loose it use it.**************************************************
     ship_to = driver.find_element_by_xpath('//*[@id="contextualIngressPtLabel_deliveryShortLine"]/span[2]')
     print("SHIP_TO:"+ship_to.text)
-    
-# ******WORK IN PROGRESS******
-    availability = driver.find_element_by_ID("availability")
-    print("Availability:   "+availability.text)
 
 #******WORK IN PROGRESS******
+    availability = driver.find_element_by_ID("availability")*********************************************************************8
+    print("Availability:   "+availability.text)
+
+#******WORK IN PROGRESS******      ****************************************************************************************************************************
     size_button = driver.find_element_by_xpath('//*[@id="dropdown_selected_size_name"]/span').click()
 
     sizes = driver.find_elements_by_xpath("//ul[@class='a-nostyle a-list-link']/li/a[@class='a-dropdown-link']")
 
     colors = driver.find_elements_by_xpath("//ul[@role='radiogroup']//img")
 
-    # if size_flag == 1 and color_flag == 1:
+
+    # GET ALL VARIATION IN SIZE AND COLORS------------------
+
+    # GET ALL VARIATIONS IN SIZE AND COLORS------------------------
+
+    #if size_flag == 1 and color_flag == 1:
     for color in colors:
         color.click()
     for size in sizes:
-        size.click()
-        # time.sleep(0.5)
-        print(color.get_attribute("alt") + "--" + size.text + ":" + driver.find_elements_by_xpath(
-            "//ul[@class='a-nostyle a-list-link']/li/a[@class='a-dropdown-link']").text + "--->" + driver.find_element_by_ID(
-            "availability").text)
+                size.click()
+                time.sleep(0.5)
+                print(color.get_attribute("alt") + "--" + size.text + ":" + driver.find_element_by_xpath(
+                "//ul[@class='a-nostyle a-list-link']/li/a[@class='a-dropdown-link']").text+"--->"+driver.find_element_by_id("availability"))
 
-#******WORK IN PROGRESS******
+    # find attribute for ship all countries path works to attribute but cant find attribute/work in progress/*******************************************************************
+
+    AllSHIPCountries = driver.find_element_by_id("contextualIngressPtLabel_deliveryShortLine").click()
+    # SHIPCountries = driver.find_elements_by_id("GLUXCountryList")
+    SHIPCountries = driver.find_elements_by_class_name('a-dropdown-link')
+
+    for AllSHIPCountries in SHIPCountries:
+        print(AllSHIPCountries.get_attribute("   "))  ####Find Attribute####
+
+
+
+
+
+    driver.quit()
+
+
+
+
+
+
+
+                #******WORK IN PROGRESS******
 
 
 
@@ -94,11 +123,17 @@ def scrape(url):
 
 
 #SIZE COLOR WORKING
-    #    for size in sizes:
-    #        print(size.text + "\t")
 
-    #    for color in colors:
-    #        print(color.get_attribute('alt'))
+#size_button = driver.find_element_by_xpath('//*[@id="dropdown_selected_size_name"]/span').click()
+
+#sizes = driver.find_elements_by_xpath("//ul[@class='a-nostyle a-list-link']/li/a[@class='a-dropdown-link']")
+
+#colors = driver.find_elements_by_xpath("//ul[@role='radiogroup']//img")
+#    for size in sizes:
+#        print(size.text + "\t")
+
+#    for color in colors:
+#        print(color.get_attribute('alt'))
 
     # GET ALL VARIATIONS IN SIZE AND COLORS------------------------
 
@@ -138,6 +173,8 @@ def scrape(url):
     #     urls = links.readlines()
     #     for url in urls:
     #         scrape(url)
+
+
 
 try:
     with open("amazonurl.txt") as links:
