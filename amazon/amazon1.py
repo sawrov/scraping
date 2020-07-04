@@ -140,7 +140,7 @@ try:
             scrape(url)
 except:
     print("\n\n\n\n")
-    print("MAKE SURE THE FILE NAME IS aliexpressurl.txt")
+    print("MAKE SURE THE FILE NAME IS amazonurl.txt")
     print("MAKE SURE IT IS IN THE SAME DIRECTORY")
     print("CHECK THE URL ENTERED")
 
