@@ -1,0 +1,5 @@
+id,SKU*,title,description,price,availability,size,color,Qnty*_
+141566,1,"Test feed product - (20cm&lt;Max Length&lt;30cm), black","<![CDATA [Test feed product]]>",1.00,"out of stock",,,0
+141567,2,"Test feed product - (20cm&lt;Max Length&lt;30cm), camouflage","<![CDATA [Test feed product]]>",2.00,"out of stock",,,0
+141568,3,"Test feed product - 1.5, black","<![CDATA [Test feed product]]>",3.00,"in stock",,,3
+141569,4,"Test feed product - 1.5, camouflage","<![CDATA [Test feed product]]>",4.00,"in stock",,,4
