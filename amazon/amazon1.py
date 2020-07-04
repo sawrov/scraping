@@ -81,9 +81,7 @@ def scrape(url):
     colors = driver.find_elements_by_xpath("//ul[@role='radiogroup']//img")
 
 
-    # GET ALL VARIATION IN SIZE AND COLORS------------------
-
-    # GET ALL VARIATIONS IN SIZE AND COLORS------------------------
+    # GET ALL VARIATIONS IN SIZE AND COLORS------------------------i had it working i fucked it up and cant retrieve my work*********************************need start over***
 
     #if size_flag == 1 and color_flag == 1:
     for color in colors:
@@ -94,7 +92,7 @@ def scrape(url):
                 print(color.get_attribute("alt") + "--" + size.text + ":" + driver.find_element_by_xpath(
                 "//ul[@class='a-nostyle a-list-link']/li/a[@class='a-dropdown-link']").text+"--->"+driver.find_element_by_id("availability"))
 
-    # find attribute for ship all countries path works to attribute but cant find attribute/work in progress/*******************************************************************
+    # find attribute for ship all countries path works to attribute but cant find attribute/work in progress/********************************************attribute issue why?**
 
     AllSHIPCountries = driver.find_element_by_id("contextualIngressPtLabel_deliveryShortLine").click()
     # SHIPCountries = driver.find_elements_by_id("GLUXCountryList")
@@ -175,7 +173,7 @@ def scrape(url):
     #         scrape(url)
 
 
-
+#*******************************************************it opens browser and goes to first link but not next one in txt url file. ? why?
 try:
     with open("amazonurl.txt") as links:
         urls = links.readlines()
