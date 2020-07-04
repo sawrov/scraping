@@ -54,13 +54,13 @@ def scrape(url):
     print("CURRENCY:  " + currency.get_attribute("data-asin-currency-code"))
 
     product_price = driver.find_element_by_xpath('//SPAN[@id="priceblock_ourprice"]')
-    print("PRICE: " + price.text)
+    print("PRODUCTPRICE: " + product_price.text)
     
 #******WORK IN PROGRESS****************************************************************************************
     #ship_price =    this is used for ship price set rule
 
-    short_description = driver.find_element_by_id("productDescription")
-    print ("DESCRIPTION: "+ description.text)
+    #short_description = driver.find_element_by_id("productDescription")
+    #print ("DESCRIPTION: "+ description.text)
 
 #******WORK IN PROGRESS****************************************************************************************
     #full_decripton = driver
