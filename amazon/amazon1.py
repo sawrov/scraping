@@ -5,12 +5,12 @@ import re
 
 def scrape(url):
 # url = "https://www.aliexpress.com/item/4000904854907.html?spm=2114.best.6.2.4da90o1v0o1vjP&scm=1007.17258.148196.0&pvid=eafaf190-7bab-48ca-bfc4-847e043f026a"
-# -------------HouseKeeping-----------
+#-------------HouseKeeping-----------
     driver = webdriver.Chrome(ChromeDriverManager().install())
     driver.set_window_position(0, 0)
     driver.set_window_size(1920, 1024)
 
-# -------------HouseKeeping-----------
+#-------------HouseKeeping-----------
 
     driver.get(url)
 
@@ -92,7 +92,7 @@ def scrape(url):
 
 
 
-#-----------------------------GET ALL shipping VARIATIONS ------------------------
+    #-----------------------------GET ALL shipping VARIATIONS ------------------------
 
 
 #    AllSHIPCountries = driver.find_element_by_id("contextualIngressPtLabel_deliveryShortLine").click()
@@ -101,7 +101,7 @@ def scrape(url):
 
 #    for AllSHIPCountries in SHIPCountries:
 #    print(AllSHIPCountries.get_attribute("  a-popover-wrapper "))
-# find attribute for ship all countries path works to attribute but cant find attribute/work in progress/
+#    find attribute for ship all countries path works to attribute but cant find attribute/work in progress/
 
 
 #******FINISHED SCRIPT********
@@ -120,10 +120,10 @@ def scrape(url):
 #colors = driver.find_elements_by_xpath("//ul[@role='radiogroup']//img")
 
 #    for size in sizes:
-#        print(size.text + "\t")
+#    print(size.text + "\t")
 
 #    for color in colors:
-#        print(color.get_attribute('alt'))
+#    print(color.get_attribute('alt'))
 
 # GET ALL VARIATIONS IN SIZE AND COLORS------------------------
 
@@ -146,4 +146,4 @@ except:
 
 quit()
 
-# ----------Read-from-text-file------------
+#----------Read-from-text-file------------
