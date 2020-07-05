@@ -4,18 +4,25 @@ from selenium.webdriver.support.ui import WebDriverWait as wait
 from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
 import re
+import os
 import time
-from array import *
 import numpy as np
+import urllib.request
+from multiprocessing.pool import ThreadPool
 
 
-# url="https://www.aliexpress.com/item/4000970644013.html?spm=a2g0o.productlist.0.0.73b9753eiOZcbh&algo_pvid=d0bdb248-24cd-434f-af4d-fb4d49b6f651&algo_expid=d0bdb248-24cd-434f-af4d-fb4d49b6f651-10&btsid=0ab6d69f15919610188667793e70a0&ws_ab_test=searchweb0_0,searchweb201602_,searchweb201603_"
-# url="https://www.aliexpress.com/item/4000970644013.html?spm=a2g0o.productlist.0.0.73b9753eiOZcbh&algo_pvid=d0bdb248-24cd-434f-af4d-fb4d49b6f651&algo_expid=d0bdb248-24cd-434f-af4d-fb4d49b6f651-10&btsid=0ab6d69f15919610188667793e70a0&ws_ab_test=searchweb0_0,searchweb201602_,searchweb201603_"
-# url="https://www.aliexpress.com/item/4000103365480.html?spm=a2g01.12617084.fdpcl001.1.2d54jCb7jCb7mn&gps-id=5547572&scm=1007.19201.130907.0&scm_id=1007.19201.130907.0&scm-url=1007.19201.130907.0&pvid=a934229c-22a1-4e1e-8b3f-901c2b5ae23f";
+def download_files(Path):
+    # regular expression to get the name of the file.
+    imagePath = Path[1]
+    reg = r'^(.*[\\\/])'
+    location = "DOWNLOADED_IMAGES\\" + str(Path[0]) + re.sub(reg, "", imagePath)
+    urllib.request.urlretrieve(imagePath, location)
+    return location
+
 
 def scrape(url):
-    # url = "https://www.aliexpress.com/item/4000904854907.html?spm=2114.best.6.2.4da90o1v0o1vjP&scm=1007.17258.148196.0&pvid=eafaf190-7bab-48ca-bfc4-847e043f026a"
     # -------------HouseKeeping-----------
+
     driver = webdriver.Chrome(ChromeDriverManager().install())
     driver.set_window_position(0, 0)
     driver.set_window_size(1920, 1024)
@@ -34,9 +41,9 @@ def scrape(url):
     # --------------To close the POP-UPBOX---------------
     try:
         wait(driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, "next-dialog-body")))
+        driver.find_element_by_class_name("next-dialog-close").click()
     except:
         print("No POPUP Detected")
-    driver.find_element_by_class_name("next-dialog-close").click()
     # --------------To close the POP-UPBOX---------------
 
     # ----------Defining Flags-------------
@@ -45,9 +52,6 @@ def scrape(url):
     size_flag = 0
     description_flag = 0
     # -----------Defining Flags------------
-    # folder Creation to download pictures.
-    # dir_for_images = 'Downloaded_Images/' + store.text + "/"
-    # os.makedirs(os.path.dirname(dir_for_images), exist_ok=True)
 
     print("-------------------INFORMATION-------------------")
     print("Price: " + price.text + "\n")
@@ -60,7 +64,6 @@ def scrape(url):
         links = (items.get_attribute('src'))
         links = links.replace(".jpg_50x50", "")
         list_of_pictures.append(links)
-        print(links)
 
     # Clear Exif Data HERE
     print("-------END-IMAGES-----------")
@@ -103,6 +106,19 @@ def scrape(url):
             for size in sizes:
                 property_values.setdefault(element.text, []).append(size.text)
 
+    # -------------------------DOWNLOAD FILES AND CLEAR EXIF-------------------------------
+
+    try:
+        os.makedirs("DOWNLOADED_IMAGES")
+    except FileExistsError:
+        pass
+    results = ThreadPool(5).imap_unordered(download_files, enumerate(list_of_pictures))
+    # test=map(download_files, list_of_pictures)
+    for result in results:
+        print(result)
+    quit()
+    # -------------------------DOWNLOAD FILES AND CLEAR EXIF-------------------------------
+
     # GET ALL VARIATIONS IN SIZE AND COLORS------------------------
     size_color_matrix = np.zeros(shape=(len(colors), len(sizes)), dtype=object)
     if size_flag == 1 and color_flag == 1:
@@ -112,8 +128,11 @@ def scrape(url):
                 try:
                     size.click()
                     time.sleep(0.1)
-                # print(driver.find_element_by_class_name('product-price-value').text)
-                    size_color_matrix[i][j] = driver.find_element_by_class_name('product-price-value').text+"("+re.sub('\spieces available\s','',driver.find_element_by_class_name("product-quantity-tip").text)+")"
+                    # print(driver.find_element_by_class_name('product-price-value').text)
+                    size_color_matrix[i][j] = driver.find_element_by_class_name(
+                        'product-price-value').text + "(" + re.sub('\spieces available\s', '',
+                                                                   driver.find_element_by_class_name(
+                                                                       "product-quantity-tip").text) + ")"
                 # print(color.get_attribute("title") + "--" + size.text + ":" + driver.find_element_by_class_name(
                 #     'product-price-value').text + "--->" + driver.find_element_by_class_name(
                 #     "product-quantity-tip").text)
@@ -121,7 +140,7 @@ def scrape(url):
                     continue
         print(size_color_matrix)
 
-    # GET ALL VARIATION IN SIZE AND COLORS------------------
+    #  GET ALL VARIATION IN SIZE AND COLORS------------------
     # Displaying all the information
     for check in property_values:
         print(check)
@@ -166,11 +185,7 @@ def scrape(url):
         print("NO IMAGES FOUND IN DESCRIPTION")
     print("---------------END IMAGES IN DESCRIPTION------------------")
 
-    # print(items.get_attribute("src"))
-    # Code for except block
-    # print(sys.exc_info()[0])
     driver.quit()
-    # input("Press the <ENTER> key to continue...")
 
 
 # ----------Read-from-text-file------------
