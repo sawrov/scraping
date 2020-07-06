@@ -116,7 +116,6 @@ def scrape(url):
     # test=map(download_files, list_of_pictures)
     for result in results:
         print(result)
-    quit()
     # -------------------------DOWNLOAD FILES AND CLEAR EXIF-------------------------------
 
     # GET ALL VARIATIONS IN SIZE AND COLORS------------------------
