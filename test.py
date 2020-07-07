@@ -13,11 +13,51 @@ from multiprocessing.pool import ThreadPool
 
 def download_files(Path):
     # regular expression to get the name of the file.
+
     imagePath = Path[1]
     reg = r'^(.*[\\\/])'
     location = "DOWNLOADED_IMAGES\\" + str(Path[0]) + re.sub(reg, "", imagePath)
-    urllib.request.urlretrieve(imagePath, location)
+    if os.path.isfile(location):
+        print("File Already Downloaded")
+    else:
+        urllib.request.urlretrieve(imagePath, location)
     return location
+
+
+def get_variations(driver):
+    sku_properties = driver.find_elements_by_xpath("//div[@class='sku-wrap']/div[@class='sku-property']")
+    property_values = dict()
+    colors = []
+    sizes = []
+    for key, _ in enumerate(sku_properties):
+        xpath2 = "//div[@class='sku-wrap']/div[@class='sku-property'][" + str(key + 1) + "]/div"
+        element = driver.find_element_by_xpath(xpath2)
+        # use try in here later
+        xpath3 = "//div[@class='sku-wrap']/div[@class='sku-property'][" + str(key + 1) + "]/ul/li"
+        if element.text == "Color:":
+            color_flag = 1
+            colors = driver.find_elements_by_xpath(xpath3 + "/div/img")
+            for index, color in enumerate(colors):
+                title = color.get_attribute("title")
+                src = color.get_attribute("title") + ":" + color.get_attribute("src")
+                property_values.setdefault(element.text, []).append(title)
+
+        elif element.text == "Ships From:":
+            shipping_flag = 1
+            shipping = driver.find_elements_by_xpath(xpath3)
+            for ship in shipping:
+                driver.execute_script("arguments[0].scrollIntoView(true);", ship)
+                ship.click()
+                elm = wait(driver, 10).until(
+                    EC.presence_of_element_located((By.XPATH, "//span[@class='product-shipping-info black-link']")))
+                time.sleep(1)
+                shipping_info = driver.find_element_by_class_name("product-shipping").text
+                property_values.setdefault(element.text, [ship.text]).append(shipping_info)
+        elif element.text == "Size:":
+            sizes = driver.find_elements_by_xpath(xpath3)
+            size_flag = 1
+            for size in sizes:
+                property_values.setdefault(element.text, []).append(size.text)
 
 
 def scrape(url):
@@ -43,8 +83,8 @@ def scrape(url):
         wait(driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, "next-dialog-body")))
         driver.find_element_by_class_name("next-dialog-close").click()
     except:
-        print("No POPUP Detected")
-    # --------------To close the POP-UPBOX---------------
+        print("No POP-UP Detected")
+    # --------------To close the POP-UP BOX---------------
 
     # ----------Defining Flags-------------
     color_flag = 0
@@ -64,8 +104,6 @@ def scrape(url):
         links = (items.get_attribute('src'))
         links = links.replace(".jpg_50x50", "")
         list_of_pictures.append(links)
-
-    # Clear Exif Data HERE
     print("-------END-IMAGES-----------")
 
     print("------------VARIATIONS-------------")
