@@ -10,22 +10,32 @@ import time
 import numpy as np
 import urllib.request as request
 from multiprocessing.pool import ThreadPool
-import requests.exceptions as reqexception
+import requests.exceptions as RException
 
 
 class AliExpressScraper:
     current_url = ""
     list_of_url = ""
     information = {}
+    links_for_color = []
+
+    # ----------Flags--------------
+    # ----------Flags--------------
 
     def __init__(self):
         print("-----------------INITIALIZING SCRAPER--------------\n")
         # print(self.ascii_art)
+        # ----------Flags--------------
+        self.color_flag = False
+        self.shipping_flag = False
+        self.size_flag = False
+        self.description_flag = False
+        # ----------Flags--------------
         try:
             self.driver = webdriver.Chrome(ChromeDriverManager().install())
             self.driver.set_window_position(0, 0)
             self.driver.set_window_size(1920, 1024)
-        except reqexception.ConnectionError:
+        except RException.ConnectionError:
             print("\n--PLEASE CHECK YOUR INTERNET CONNECTION--")
             exit()
         except DriverExceptions.InvalidSessionIdException:
@@ -46,10 +56,9 @@ class AliExpressScraper:
                 else:
                     print("\nPlease Check The Url")
                     return False
-            except reqexception.ConnectionError:
+            except RException.ConnectionError:
                 print("\nCHECK INTERNET CONNECTION")
                 return False
-
 
     def read_url_from_file(self, file):
         try:
@@ -84,21 +93,81 @@ class AliExpressScraper:
         self.information["images"] = self.driver.find_elements_by_xpath('//div[@class="images-view-item"]/img')
         self.information["qty"] = self.driver.find_element_by_class_name("product-quantity-tip")
 
+    def get_variations(self):
+        sku_properties = self.driver.find_elements_by_xpath("//div[@class='sku-wrap']/div[@class='sku-property']")
+        property_values = dict()
+        for key, _ in enumerate(sku_properties):
+            xpath2 = "//div[@class='sku-wrap']/div[@class='sku-property'][" + str(key + 1) + "]/div"
+            element = self.driver.find_element_by_xpath(xpath2)
+            xpath3 = "//div[@class='sku-wrap']/div[@class='sku-property'][" + str(key + 1) + "]/ul/li"
+            if element.text == "Color:":
+                self.color_flag = True
+                self.information["color_elements"] = self.driver.find_elements_by_xpath(xpath3 + "/div/img")
+                self.information["color_names"] = []
+                self.information["color_img_links"] = []
+                for index, color in enumerate(self.information["color_elements"]):
+                    self.information["color_names"].append(color.get_attribute("title"))
+                    self.information["color_img_links"].append(
+                        color.get_attribute("title") + ":" + color.get_attribute("src"))
+
+            elif element.text == "Ships From:":
+                self.shipping_flag = True
+                self.information["shipping_elements"] = self.driver.find_elements_by_xpath(xpath3)
+                self.information["shipping_details"] = []
+                for ship in self.information["shipping_elements"]:
+                    self.driver.execute_script("arguments[0].scrollIntoView(true);", ship)
+                    ship.click()
+                    _ = wait(self.driver, 10).until(
+                        EC.presence_of_element_located((By.XPATH, "//span[@class='product-shipping-info black-link']")))
+                    time.sleep(1)
+                    self.information["shipping_details"].append(
+                        self.driver.find_element_by_class_name("product-shipping").text)
+            elif element.text == "Size:":
+                self.information["size_elements"] = self.driver.find_elements_by_xpath(xpath3)
+                self.size_flag = True
+                self.information["size_details"] = []
+                for size in self.information["size_elements"]:
+                    self.information["size_details"].append(size.text)
+
+    def price_for_size_and_colors(self):
+        self.size_color_matrix = np.zeros(
+            shape=(len(self.information["color_elements"]), len(self.information["size_elements"])), dtype=object)
+        for i, color in enumerate(self.information["color_elements"]):
+            color.click()
+            for j, size in enumerate(self.information["size_elements"]):
+                try:
+                    size.click()
+                    time.sleep(0.1)
+                    self.size_color_matrix[i][j] = self.driver.find_element_by_class_name(
+                        'product-price-value').text + "||" + re.sub('\spieces available\s', '',
+                                                                    self.driver.find_element_by_class_name(
+                                                                        "product-quantity-tip").text)
+                except:
+                    print("Size for " + color.get_attribute("title") + "\tUNAVAILABLE")
+                    continue
+
     def show_info(self):
-        print(self.information["qty"].text)
-        print(self.information["price"].text)
+        if self.size_flag: print(self.information["size_elements"])
+        if self.color_flag: print(self.information["color_names"])
+        if self.shipping_flag:
+            print(self.information["shipping_details"])
+        else:
+            print(self.driver.find_element_by_class_name("product-shipping").text)
         print(self.information["store"].text)
         print(self.information["title"].text)
 
     def terminate(self):
         self.driver.quit()
 
-test=input("Enter URL to scrape : ")
+
+# test=input("Enter URL to scrape : ")
+test = "https://www.aliexpress.com/item/33005904049.html?spm=a2g01.12617084.fdpcl001.1.658b2Mz22Mz2yJ&gps-id=5547572&scm=1007.19201.130907.0&scm_id=1007.19201.130907.0&scm-url=1007.19201.130907.0&pvid=97503561-6e74-442d-9c15-eaed73c87396"
 scrape = AliExpressScraper()
-scrape.read_url_from_file(test)
+# scrape.read_url_from_file(test)
 if scrape.update_url(test):
     if scrape.load_url():
         scrape.update_basic_information()
+        scrape.get_variations()
         scrape.show_info()
         print("-----------THE SCRAPING COMPLETED SUCCESSFULLY----------\n\n")
 
