@@ -30,6 +30,7 @@ class AliExpressScraper:
         self.shipping_flag = False
         self.size_flag = False
         self.description_flag = False
+        self.size_color_matrix_flag = False
         # ----------Flags--------------
         try:
             self.driver = webdriver.Chrome(ChromeDriverManager().install())
@@ -95,12 +96,12 @@ class AliExpressScraper:
 
     def get_variations(self):
         sku_properties = self.driver.find_elements_by_xpath("//div[@class='sku-wrap']/div[@class='sku-property']")
-        property_values = dict()
         for key, _ in enumerate(sku_properties):
             xpath2 = "//div[@class='sku-wrap']/div[@class='sku-property'][" + str(key + 1) + "]/div"
             element = self.driver.find_element_by_xpath(xpath2)
             xpath3 = "//div[@class='sku-wrap']/div[@class='sku-property'][" + str(key + 1) + "]/ul/li"
-            if element.text == "Color:":
+            print(element.text)
+            if "Color:" in element.text:
                 self.color_flag = True
                 self.information["color_elements"] = self.driver.find_elements_by_xpath(xpath3 + "/div/img")
                 self.information["color_names"] = []
@@ -115,7 +116,7 @@ class AliExpressScraper:
                 self.information["shipping_elements"] = self.driver.find_elements_by_xpath(xpath3)
                 self.information["shipping_details"] = []
                 for ship in self.information["shipping_elements"]:
-                    self.driver.execute_script("arguments[0].scrollIntoView(true);", ship)
+                    # self.driver.execute_script("arguments[0].scrollIntoView(true);", ship)
                     ship.click()
                     _ = wait(self.driver, 10).until(
                         EC.presence_of_element_located((By.XPATH, "//span[@class='product-shipping-info black-link']")))
@@ -128,40 +129,59 @@ class AliExpressScraper:
                 self.information["size_details"] = []
                 for size in self.information["size_elements"]:
                     self.information["size_details"].append(size.text)
+        if (self.color_flag and self.size_flag):
+            self.price_for_size_and_colors()
 
     def price_for_size_and_colors(self):
+        self.size_color_matrix_flag = True
         self.size_color_matrix = np.zeros(
             shape=(len(self.information["color_elements"]), len(self.information["size_elements"])), dtype=object)
-        for i, color in enumerate(self.information["color_elements"]):
-            color.click()
-            for j, size in enumerate(self.information["size_elements"]):
+        self.i = 0;
+        while True:
+            if self.shipping_flag:
                 try:
-                    size.click()
-                    time.sleep(0.1)
-                    self.size_color_matrix[i][j] = self.driver.find_element_by_class_name(
-                        'product-price-value').text + "||" + re.sub('\spieces available\s', '',
-                                                                    self.driver.find_element_by_class_name(
-                                                                        "product-quantity-tip").text)
+                    self.information["shipping_elements"][self.i].click()
                 except:
-                    print("Size for " + color.get_attribute("title") + "\tUNAVAILABLE")
-                    continue
+                    break
+                self.i += 1
+            for i, color in enumerate(self.information["color_elements"]):
+                color.click()
+                for j, size in enumerate(self.information["size_elements"]):
+                    try:
+                        size.click()
+                        time.sleep(0.1)
+                        self.size_color_matrix[i][j] = self.driver.find_element_by_class_name(
+                            'product-price-value').text + "||" + re.sub('\spieces available\s', '',
+                                                                        self.driver.find_element_by_class_name(
+                                                                            "product-quantity-tip").text)
+                    except:
+                        print("Size for " + color.get_attribute("title") + "\tUNAVAILABLE")
+                        continue
 
     def show_info(self):
-        if self.size_flag: print(self.information["size_elements"])
-        if self.color_flag: print(self.information["color_names"])
+        print("\nSIZE_ELEMENTS---\n")
+        if self.size_flag: print(self.information["size_details"])
+        print("\nCOLOR_NAMES---\n")
+        print(self.information["color_img_links"])
+        if self.color_flag: print(self.information["color_img_links"])
+        print("\nSHIPPING INFO---\n")
+
         if self.shipping_flag:
             print(self.information["shipping_details"])
         else:
             print(self.driver.find_element_by_class_name("product-shipping").text)
+
+        print("\n STORE INFO---\n")
         print(self.information["store"].text)
         print(self.information["title"].text)
+        if self.size_color_matrix_flag: print(self.size_color_matrix)
 
     def terminate(self):
         self.driver.quit()
 
 
-# test=input("Enter URL to scrape : ")
-test = "https://www.aliexpress.com/item/33005904049.html?spm=a2g01.12617084.fdpcl001.1.658b2Mz22Mz2yJ&gps-id=5547572&scm=1007.19201.130907.0&scm_id=1007.19201.130907.0&scm-url=1007.19201.130907.0&pvid=97503561-6e74-442d-9c15-eaed73c87396"
+test=input("Enter URL to scrape : ")
+# test = "https://www.aliexpress.com/item/4001139880092.html?spm=2114.12010612.8148356.3.7d814f04zET2wu"
 scrape = AliExpressScraper()
 # scrape.read_url_from_file(test)
 if scrape.update_url(test):
