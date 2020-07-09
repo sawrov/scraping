@@ -190,8 +190,8 @@ class AliExpressScraper:
         self.driver.quit()
 
 
-# test=input("Enter URL to scrape : ")
-test = "https://www.aliexpress.com/item/4001139880092.html?spm=2114.12010612.8148356.3.7d814f04zET2wu"
+test=input("Enter URL to scrape : ")
+#test = "https://www.aliexpress.com/item/4001139880092.html?spm=2114.12010612.8148356.3.7d814f04zET2wu"
 scrape = AliExpressScraper()
 # scrape.read_url_from_file(test)
 if scrape.update_url(test):
