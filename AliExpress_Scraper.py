@@ -18,12 +18,12 @@ class AliExpressScraper:
     list_of_url = ""
     information = {}
     links_for_color = []
-    information["variation_in_size_and_color"] = []
 
     # ----------Flags--------------
     # ----------Flags--------------
 
     def __init__(self):
+        self.index = 0;
         print("-----------------INITIALIZING SCRAPER--------------\n")
         # print(self.ascii_art)
         # ----------Flags--------------
@@ -136,7 +136,9 @@ class AliExpressScraper:
         self.size_color_matrix_flag = True
         self.size_color_matrix = np.zeros(
             shape=(len(self.information["color_elements"]), len(self.information["size_elements"])), dtype=object)
-        self.index = 0;
+        if self.shipping_flag:
+            self.information["variation_in_size_and_color"] = np.empty(len(self.information["shipping_elements"]),
+                                                                       dtype=object)
         while True:
             if self.shipping_flag:
                 try:
@@ -162,8 +164,11 @@ class AliExpressScraper:
                         continue
             print("VALUE APPENDED TO THE ARRAY IS: \n")
             print(self.size_color_matrix)
-            self.information["variation_in_size_and_color"].append(self.size_color_matrix)
+            self.information["variation_in_size_and_color"][self.index]=(self.size_color_matrix)
+            print("VALUE RIGHT AFTER ASSIGNMENT: \n")
+            print(self.information["variation_in_size_and_color"][self.index])
             self.index += 1
+        print(self.information["variation_in_size_and_color"])
 
     def show_info(self):
         print("VALUE AFTER STORING\n")
