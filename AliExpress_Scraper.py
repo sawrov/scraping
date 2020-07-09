@@ -18,6 +18,7 @@ class AliExpressScraper:
     list_of_url = ""
     information = {}
     links_for_color = []
+    information["variation_in_size_and_color"] = []
 
     # ----------Flags--------------
     # ----------Flags--------------
@@ -103,13 +104,12 @@ class AliExpressScraper:
             print(element.text)
             if "Color:" in element.text:
                 self.color_flag = True
+                self.information["track_color_selection"] = self.driver.find_elements_by_xpath(xpath3)
                 self.information["color_elements"] = self.driver.find_elements_by_xpath(xpath3 + "/div/img")
-                self.information["color_names"] = []
-                self.information["color_img_links"] = []
+                self.information["color_details"] = []
                 for index, color in enumerate(self.information["color_elements"]):
-                    self.information["color_names"].append(color.get_attribute("title"))
-                    self.information["color_img_links"].append(
-                        color.get_attribute("title") + ":" + color.get_attribute("src"))
+                    self.information["color_details"].append(
+                        [color.get_attribute("title"), color.get_attribute("src")])
 
             elif element.text == "Ships From:":
                 self.shipping_flag = True
@@ -136,35 +136,40 @@ class AliExpressScraper:
         self.size_color_matrix_flag = True
         self.size_color_matrix = np.zeros(
             shape=(len(self.information["color_elements"]), len(self.information["size_elements"])), dtype=object)
-        self.i = 0;
+        self.index = 0;
         while True:
             if self.shipping_flag:
                 try:
-                    self.information["shipping_elements"][self.i].click()
-                except:
+                    self.information["shipping_elements"][self.index].click()
+                except IndexError:
                     break
-                self.i += 1
             for i, color in enumerate(self.information["color_elements"]):
-                color.click()
+                if "selected" in self.information["track_color_selection"][i].get_attribute("class"):
+                    print("SELECTED HURRAH")
+                else:
+                    color.click()
                 for j, size in enumerate(self.information["size_elements"]):
                     try:
                         size.click()
-                        time.sleep(0.1)
-                        self.size_color_matrix[i][j] = self.driver.find_element_by_class_name(
+                        time.sleep(0.2)
+                        temp = self.driver.find_element_by_class_name(
                             'product-price-value').text + "||" + re.sub('\spieces available\s', '',
                                                                         self.driver.find_element_by_class_name(
                                                                             "product-quantity-tip").text)
-                    except:
+                        self.size_color_matrix[i][j] = temp
+                    except DriverExceptions.NoSuchElementException:
                         print("Size for " + color.get_attribute("title") + "\tUNAVAILABLE")
                         continue
+            print("VALUE APPENDED TO THE ARRAY IS: \n")
+            print(self.size_color_matrix)
+            self.information["variation_in_size_and_color"].append(self.size_color_matrix)
+            self.index += 1
 
     def show_info(self):
-        print("\nSIZE_ELEMENTS---\n")
-        if self.size_flag: print(self.information["size_details"])
-        print("\nCOLOR_NAMES---\n")
-        print(self.information["color_img_links"])
-        if self.color_flag: print(self.information["color_img_links"])
-        print("\nSHIPPING INFO---\n")
+        print("VALUE AFTER STORING\n")
+        if self.size_color_matrix_flag: print(self.information["variation_in_size_and_color"])
+
+        print("\n")
 
         if self.shipping_flag:
             print(self.information["shipping_details"])
@@ -180,8 +185,8 @@ class AliExpressScraper:
         self.driver.quit()
 
 
-test=input("Enter URL to scrape : ")
-# test = "https://www.aliexpress.com/item/4001139880092.html?spm=2114.12010612.8148356.3.7d814f04zET2wu"
+# test=input("Enter URL to scrape : ")
+test = "https://www.aliexpress.com/item/4001139880092.html?spm=2114.12010612.8148356.3.7d814f04zET2wu"
 scrape = AliExpressScraper()
 # scrape.read_url_from_file(test)
 if scrape.update_url(test):
