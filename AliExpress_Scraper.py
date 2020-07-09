@@ -164,7 +164,7 @@ class AliExpressScraper:
                         continue
             print("VALUE APPENDED TO THE ARRAY IS: \n")
             print(self.size_color_matrix)
-            self.information["variation_in_size_and_color"][self.index]=(self.size_color_matrix)
+            self.information["variation_in_size_and_color"][self.index]=(self.size_color_matrix.tolist())
             print("VALUE RIGHT AFTER ASSIGNMENT: \n")
             print(self.information["variation_in_size_and_color"][self.index])
             self.index += 1
