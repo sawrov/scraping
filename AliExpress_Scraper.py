@@ -24,6 +24,7 @@ class AliExpressScraper:
 
     def __init__(self):
         self.index = 0;
+        self.description_element=None
         print("-----------------INITIALIZING SCRAPER--------------\n")
         # print(self.ascii_art)
         # ----------Flags--------------
@@ -101,14 +102,16 @@ class AliExpressScraper:
 
     def get_description(self):
         i = 0
+        test=""
         while i < 5000:
             try:
                 self.description_element = self.driver.find_element_by_id("product-description")
+                test=self.description_element.text
             except:
                 pass
             self.driver.execute_script("window.scrollBy(0, arguments[0]);", i)
             i = i + 10
-            if self.description_element.text != "":
+            if test != "":
                 self.description_flag = True
                 break
 
@@ -134,7 +137,7 @@ class AliExpressScraper:
 
             elif element.text == "Ships From:":
                 self.shipping_flag = True
-                self.information["shipping_elements"] = self.driver.find_elements_by_xpath(xpath3)
+                self.information["shipping_elements"] = self.driver.find_elements_by_xpath(xpath3+"[@class='sku-property-item']")
                 self.information["shipping_details"] = []
                 for ship in self.information["shipping_elements"]:
                     self.driver.execute_script("arguments[0].scrollIntoView(true);",
@@ -145,7 +148,7 @@ class AliExpressScraper:
                     time.sleep(1)
                     self.information["shipping_details"].append(
                         ship.text + ":->" + self.information["shipping_info_element"].text)
-            elif element.text == "Size:":
+            elif "Size:" in element.text:
                 self.information["size_elements"] = self.driver.find_elements_by_xpath(xpath3)
                 self.size_flag = True
                 self.information["size_details"] = []
@@ -202,7 +205,7 @@ class AliExpressScraper:
                 f.write("\t" + info.replace('\r', '').replace('\n', '') + "\n")
 
         else:
-            f.write(self.information["shipping_info_element"])
+            f.write(self.information["shipping_info_element"].text)
 
         if self.color_flag:
             f.write("\nCOLOR INFORMATION: \n")
@@ -233,8 +236,8 @@ class AliExpressScraper:
         self.driver.quit()
 
 
-test = input("Enter URL to scrape : ")
-# test = "https://www.aliexpress.com/item/4001139880092.html?spm=2114.12010612.8148356.3.7d814f04zET2wu"
+# test = input("Enter URL to scrape : ")
+test = "https://www.aliexpress.com/item/4000411592783.html?spm=a2g0o.productlist.0.0.27eae7b8SJ75f6&s=p&ad_pvid=202007092234373867627591379420003663993_1&algo_pvid=e9dfc962-ad76-406a-82c7-eba6f3c67aa5&algo_expid=e9dfc962-ad76-406a-82c7-eba6f3c67aa5-0&btsid=0ab6fab215943592771575542e867d&ws_ab_test=searchweb0_0,searchweb201602_,searchweb201603_ "
 scrape = AliExpressScraper()
 # scrape.read_url_from_file(test)
 if scrape.update_url(test):
@@ -243,4 +246,4 @@ if scrape.update_url(test):
         print("-----------THE SCRAPING COMPLETED SUCCESSFULLY----------\n\n")
 
 scrape.terminate()
-print("PLEASE CHECK YOUR DIRECTORY FOR TEXT FILES")
+print("PLEASE CHECK YOUR DIRECTORY FOR TEXT FILES ")
