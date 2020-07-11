@@ -66,10 +66,7 @@ class AliExpressScraper:
         if self.set_url(url):
             if self.load_url():
                 self.show_info()
-            else:
-                self.terminate()
-        else:
-            self.terminate()
+        self.terminate()
 
     def set_url(self, url):
         if url:

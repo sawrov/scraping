@@ -3,7 +3,9 @@ STORE:	large size clothes Store
 BASE-PRICE:	US $9.75 - 11.70
 
 SHIPPING INFORMATION: 
-Can not deliver to Australia
+Free Shipping 
+to Australia via AliExpress Standard Shipping
+Estimated Delivery: 20-41 days
 COLOR INFORMATION: 
 	Number of Different Colors:16
 	Color Names:
@@ -177,4 +179,5 @@ VARIATION IN PRICES:
 
 ---------DESCRIPTION-----------
 
-UNABLE TO EXTRACT DESCRIPTION: NO DESCRIPTION PRESENT
+WITH VELVET MODLE SHOW 
+ 
