@@ -1,0 +1,59 @@
+import schedule
+
+
+#use this sample for adding all data except images???
+HELLo_before_1 = ("0 before cron")
+print ("HELLOBEFORE1: "+ HELLo_before_1)
+
+HELLo_before_1 = ("1 before cron")
+print ("HELLOBEFORE1: "+ HELLo_before_1)
+
+HELLo_before_2 = ("2 before cron")
+print ("HELLOBEFORE2: "+ HELLo_before_2)
+
+
+#cron-------schedule-------
+
+def product_price ():
+    print("Hello_after_11")
+
+def ship_price ():
+    print("Hello_after_22")
+
+#cron schedule: / seconds / min  / day / days / days @ time / weeks
+
+#product_price
+schedule.every(5).seconds.do(product_price)
+schedule.every(5).minutes.do(product_price)
+schedule.every(1).day.do(product_price)
+schedule.every(7).days.seconds.do(product_price)
+schedule.every(0).days.at("12:30").do(product_price)
+schedule.every(5).weeks.do(product_price)
+
+#ship_price
+schedule.every(5).seconds.do(ship_price)
+schedule.every(5).minutes.do(ship_price)
+schedule.every(1).day.do(ship_price)
+schedule.every(7).days.seconds.do(ship_price)
+schedule.every(0).days.at("12:30").do(ship_price)
+# End of cron job
+
+print("Hello_after_11")
+print("Hello_after_22")
+
+
+
+
+
+
+
+#run schedule
+#while True:
+#    schedule.run_pending()
+#    time.sleep(1)
+
+# in line above ((float(currentPoint)-startPoint)</>(startPoint))*100.00  this in line code here
+# this </>  = / which is to add percent formula for price set rule (current / start *100
+
+# need to do another for amount in $   & also for both together $ & /
+
