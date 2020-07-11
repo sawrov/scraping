@@ -24,7 +24,7 @@ class AliExpressScraper:
 
     def __init__(self):
         self.index = 0;
-        self.description_element=None
+        self.description_element = None
         print("-----------------INITIALIZING SCRAPER--------------\n")
         # print(self.ascii_art)
         # ----------Flags--------------
@@ -102,16 +102,16 @@ class AliExpressScraper:
 
     def get_description(self):
         i = 0
-        test=""
+        check = ""
         while i < 5000:
             try:
                 self.description_element = self.driver.find_element_by_id("product-description")
-                test=self.description_element.text
+                check = self.description_element.text
             except:
                 pass
             self.driver.execute_script("window.scrollBy(0, arguments[0]);", i)
             i = i + 10
-            if test != "":
+            if check != "":
                 self.description_flag = True
                 break
 
@@ -137,7 +137,7 @@ class AliExpressScraper:
 
             elif element.text == "Ships From:":
                 self.shipping_flag = True
-                self.information["shipping_elements"] = self.driver.find_elements_by_xpath(xpath3+"[@class='sku-property-item']")
+                self.information["shipping_elements"] = self.driver.find_elements_by_xpath(xpath3)
                 self.information["shipping_details"] = []
                 for ship in self.information["shipping_elements"]:
                     self.driver.execute_script("arguments[0].scrollIntoView(true);",
@@ -149,7 +149,8 @@ class AliExpressScraper:
                     self.information["shipping_details"].append(
                         ship.text + ":->" + self.information["shipping_info_element"].text)
             elif "Size:" in element.text:
-                self.information["size_elements"] = self.driver.find_elements_by_xpath(xpath3)
+                self.information["size_elements"] = self.driver.find_elements_by_xpath(
+                    xpath3 + "[@class='sku-property-item']")
                 self.size_flag = True
                 self.information["size_details"] = []
                 for size in self.information["size_elements"]:
@@ -165,6 +166,8 @@ class AliExpressScraper:
         if self.shipping_flag:
             self.information["variation_in_size_and_color"] = np.empty(len(self.information["shipping_elements"]),
                                                                        dtype=object)
+        else:
+            self.information["variation_in_size_and_color"] = np.empty(1, dtype=object)
         while True:
             if self.shipping_flag:
                 try:
@@ -190,6 +193,8 @@ class AliExpressScraper:
                         continue
             self.information["variation_in_size_and_color"][self.index] = (self.size_color_matrix.tolist())
             self.index += 1
+            if not self.shipping_flag:
+                break
 
     def show_info(self):
         self.get_variations()
