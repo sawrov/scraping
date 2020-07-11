@@ -1,0 +1,26 @@
+from selenium import webdriver
+
+chrome_path = r"C:\Users\bezz\OneDrive\Desktop\chromedriver.exe"
+driver = webdriver.Chrome()
+driver.get("https://www.amazon.com/Kikiz-Little-Girls-Princess-Dress/dp/B07NW8KZDP/ref=sr_1_2_sspa?dchild=1&keywords=shoes&qid=1593419826&sr=8-2-spons&spLa=ZW5jcnlwdGVkUXVhbGlmaWVyPUEzUk8wMlBJTjBFMUlDJmVuY3J5cHRlZElkPUEwMTkxMDUwWDQxT1lDWjdLSDY3JmVuY3J5cHRlZEFkSWQ9QTAyNTAxOTAyQU9YSkdNNk0wTTE3JndpZGdldE5hbWU9c3BfYXRmJmFjdGlvbj1jbGlja1JlZGlyZWN0JmRvTm90TG9nQ2xpY2s9dHJ1ZQ&th=1&psc=1")
+
+#size = driver.find_element_by_id("variation_size_name")
+#print("size: " + size.text)
+
+
+
+
+size = driver.find_element_by_xpath('//*[@id="dropdown_selected_size_name"]/span').click()
+sizes = driver.find_elements_by_xpath("//ul[@class='a-nostyle a-list-link']/li/a[@class='a-dropdown-link']")
+colors = driver.find_elements_by_xpath("//ul[@role='radiogroup']//img")
+price = driver.find_element_by_xpath('//SPAN[@id="priceblock_ourprice"]')
+print("PRICE: " + price.text)
+availability = driver.find_element_by_id('availabilityInsideBuyBox_feature_div')
+print ("AVAILABILITY   "+availability.text)
+for size in sizes:
+    size.text + ("\t")
+for color in colors:
+    color.get_attribute('alt')
+    print(color.get_attribute("alt") + "--" + driver.find_element_by_id("variation_size_name").text + ":" + driver.find_element_by_xpath(
+                        '//SPAN[@id="priceblock_ourprice"]').text + "--->" + driver.find_element_by_id(
+                         'availability').text)
