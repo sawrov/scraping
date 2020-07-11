@@ -35,6 +35,19 @@ class AliExpressScraper:
         self.size_color_matrix_flag = False
         self.output_text = "\t---------------------------------------------------------\n"
         # ----------Flags--------------
+
+        # ---------MAKING DIRECTORY---------
+
+        try:
+            os.makedirs("Output/TEXT")
+        except FileExistsError:
+            pass
+        try:
+            os.makedirs("Output/IMAGES")
+        except FileExistsError:
+            pass
+        # ---------MAKING DIRECTORY---------
+
         try:
             self.driver = webdriver.Chrome(ChromeDriverManager().install())
             self.driver.set_window_position(0, 0)
@@ -155,8 +168,18 @@ class AliExpressScraper:
                 self.information["size_details"] = []
                 for size in self.information["size_elements"]:
                     self.information["size_details"].append(size.text)
+            else:
+                print("SAURAV HAS NOT ACCOUNTED FOR FOLLOWING VARIATION")
+                print(element.text)
+                print("INFORM HIM AND COPY THIS LINK")
         if self.color_flag and self.size_flag:
             self.price_for_size_and_colors()
+
+    def reset_buttons(self,elements):
+        for element in elements:
+            if "selected" in element.get_attribute("class"):
+                element.click()
+
 
     def price_for_size_and_colors(self):
 
@@ -175,12 +198,14 @@ class AliExpressScraper:
                 except IndexError:
                     break
             for i, color in enumerate(self.information["color_elements"]):
+                self.reset_buttons(self.information["color_elements"])
                 if "selected" in self.information["track_color_selection"][i].get_attribute("class"):
                     pass
                 else:
                     color.click()
                 for j, size in enumerate(self.information["size_elements"]):
                     try:
+                        if "disabled" in size.get_attribute("class"): continue
                         size.click()
                         time.sleep(0.2)
                         temp = self.driver.find_element_by_class_name(
@@ -188,9 +213,13 @@ class AliExpressScraper:
                                                                         self.driver.find_element_by_class_name(
                                                                             "product-quantity-tip").text)
                         self.size_color_matrix[i][j] = temp
+                        size.click()
+
+
                     except DriverExceptions.NoSuchElementException:
                         print("Size for " + color.get_attribute("title") + "\tUNAVAILABLE")
                         continue
+                self.reset_buttons(self.information["size_elements"])
             self.information["variation_in_size_and_color"][self.index] = (self.size_color_matrix.tolist())
             self.index += 1
             if not self.shipping_flag:
@@ -199,12 +228,12 @@ class AliExpressScraper:
     def show_info(self):
         self.get_variations()
         self.get_description()
-        f = open(str(self.information["title"]) + ".txt", "w+")
+        f = open("Output/TEXT/" + str(self.information["title"]) + ".txt", "w+")
         f.write("NAME:\t" + self.information["title"] + "\n")
         f.write("STORE:\t" + self.information["store"] + "\n")
         f.write("BASE-PRICE:\t" + self.information["price"] + "\n")
         f.write("\nSHIPPING INFORMATION: \n")
-        if self.size_color_matrix_flag: print(self.information["variation_in_size_and_color"])
+        # if self.size_color_matrix_flag: print(self.information["variation_in_size_and_color"])
         if self.shipping_flag:
             for info in self.information["shipping_details"]:
                 f.write("\t" + info.replace('\r', '').replace('\n', '') + "\n")
@@ -241,8 +270,10 @@ class AliExpressScraper:
         self.driver.quit()
 
 
-test = input("Enter URL to scrape : ")
+# test = input("Enter URL to scrape : ")
+test = "https://www.aliexpress.com/item/4000588993297.html?spm=a2g0o.productlist.0.0.6321e7b8lZ1xNh&algo_pvid=6e318c9b-c868-44d6-b321-78c194ae8f2f&algo_expid=6e318c9b-c868-44d6-b321-78c194ae8f2f-4&btsid=0ab6d69515944368163817904e975f&ws_ab_test=searchweb0_0,searchweb201602_,searchweb201603_"
 # test = "https://www.aliexpress.com/item/4000411592783.html?spm=a2g0o.productlist.0.0.27eae7b8SJ75f6&s=p&ad_pvid=202007092234373867627591379420003663993_1&algo_pvid=e9dfc962-ad76-406a-82c7-eba6f3c67aa5&algo_expid=e9dfc962-ad76-406a-82c7-eba6f3c67aa5-0&btsid=0ab6fab215943592771575542e867d&ws_ab_test=searchweb0_0,searchweb201602_,searchweb201603_ "
+# test = "https://www.aliexpress.com/item/4000911368854.html?spm=a2g0o.productlist.0.0.6321e7b8lZ1xNh&algo_pvid=6e318c9b-c868-44d6-b321-78c194ae8f2f&algo_expid=6e318c9b-c868-44d6-b321-78c194ae8f2f-0&btsid=0ab6d69515944368163817904e975f&ws_ab_test=searchweb0_0,searchweb201602_,searchweb201603_"
 scrape = AliExpressScraper()
 # scrape.read_url_from_file(test)
 if scrape.update_url(test):
@@ -251,4 +282,4 @@ if scrape.update_url(test):
         print("-----------THE SCRAPING COMPLETED SUCCESSFULLY----------\n\n")
 
 scrape.terminate()
-print("PLEASE CHECK YOUR DIRECTORY FOR TEXT FILES ")
+print("PLEASE CHECK \"Output\" DIRECTORY FOR TEXT FILES ")
