@@ -22,7 +22,7 @@ class AliExpressScraper:
     # ----------Flags--------------
     # ----------Flags--------------
 
-    def __init__(self):
+    def __init__(self, url):
         self.index = 0;
         self.description_element = None
         print("-----------------INITIALIZING SCRAPER--------------\n")
@@ -54,16 +54,24 @@ class AliExpressScraper:
             self.driver.set_window_size(1920, 1024)
         except RException.ConnectionError:
             print("\n--PLEASE CHECK YOUR INTERNET CONNECTION--")
-            exit()
+            quit()
         except DriverExceptions.InvalidSessionIdException:
             print("\nBROWSER CLOSED UNEXPECTEDLY:.....")
-            exit()
+            quit()
 
         except DriverExceptions.SessionNotCreatedException:
             print("\nBROWSER CLOSED BEFORE SESSION WAS CREATED")
             exit()
 
-    def update_url(self, url):
+        if self.set_url(url):
+            if self.load_url():
+                self.show_info()
+            else:
+                self.terminate()
+        else:
+            self.terminate()
+
+    def set_url(self, url):
         if url:
             try:
                 response = request.urlopen(url).getcode()
@@ -175,11 +183,10 @@ class AliExpressScraper:
         if self.color_flag and self.size_flag:
             self.price_for_size_and_colors()
 
-    def reset_buttons(self,elements):
+    def reset_buttons(self, elements):
         for element in elements:
             if "selected" in element.get_attribute("class"):
                 element.click()
-
 
     def price_for_size_and_colors(self):
 
@@ -214,7 +221,6 @@ class AliExpressScraper:
                                                                             "product-quantity-tip").text)
                         self.size_color_matrix[i][j] = temp
                         size.click()
-
 
                     except DriverExceptions.NoSuchElementException:
                         print("Size for " + color.get_attribute("title") + "\tUNAVAILABLE")
@@ -271,15 +277,18 @@ class AliExpressScraper:
 
 
 # test = input("Enter URL to scrape : ")
-test = "https://www.aliexpress.com/item/4000588993297.html?spm=a2g0o.productlist.0.0.6321e7b8lZ1xNh&algo_pvid=6e318c9b-c868-44d6-b321-78c194ae8f2f&algo_expid=6e318c9b-c868-44d6-b321-78c194ae8f2f-4&btsid=0ab6d69515944368163817904e975f&ws_ab_test=searchweb0_0,searchweb201602_,searchweb201603_"
 # test = "https://www.aliexpress.com/item/4000411592783.html?spm=a2g0o.productlist.0.0.27eae7b8SJ75f6&s=p&ad_pvid=202007092234373867627591379420003663993_1&algo_pvid=e9dfc962-ad76-406a-82c7-eba6f3c67aa5&algo_expid=e9dfc962-ad76-406a-82c7-eba6f3c67aa5-0&btsid=0ab6fab215943592771575542e867d&ws_ab_test=searchweb0_0,searchweb201602_,searchweb201603_ "
 # test = "https://www.aliexpress.com/item/4000911368854.html?spm=a2g0o.productlist.0.0.6321e7b8lZ1xNh&algo_pvid=6e318c9b-c868-44d6-b321-78c194ae8f2f&algo_expid=6e318c9b-c868-44d6-b321-78c194ae8f2f-0&btsid=0ab6d69515944368163817904e975f&ws_ab_test=searchweb0_0,searchweb201602_,searchweb201603_"
-scrape = AliExpressScraper()
+try:
+    f = open("debug.txt", "w+")
+except:
+    print("file not present")
+with open("aliexpressurl.txt") as links:
+    urls = links.readlines()
+    for url in urls:
+        try:
+            scrape = AliExpressScraper(url)
+        except:
+            f.write(url+"\n\n")
 # scrape.read_url_from_file(test)
-if scrape.update_url(test):
-    if scrape.load_url():
-        scrape.show_info()
-        print("-----------THE SCRAPING COMPLETED SUCCESSFULLY----------\n\n")
-
-scrape.terminate()
 print("PLEASE CHECK \"Output\" DIRECTORY FOR TEXT FILES ")
