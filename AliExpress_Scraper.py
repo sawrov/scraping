@@ -25,6 +25,7 @@ class AliExpressScraper:
     def __init__(self, url):
         self.index = 0;
         self.description_element = None
+        self.download_location = ""
         print("-----------------INITIALIZING SCRAPER--------------\n")
         # print(self.ascii_art)
         # ----------Flags--------------
@@ -82,6 +83,24 @@ class AliExpressScraper:
                 print("\nCHECK INTERNET CONNECTION")
                 return False
 
+    def download_files(self, Path):
+        # regular expression to get the name of the file.
+        download_url = Path[1].replace(".jpg_50x50", "")
+        reg = r'^(.*[\\\/])'
+        filename = re.sub(reg, "", download_url)
+        full_path = self.download_location + "/" + str(Path[0]) + filename
+        print(download_url)
+        print(full_path)
+        print("-----------")
+        try:
+            if os.path.isfile(full_path):
+                print("File Already Downloaded")
+            else:
+                request.urlretrieve(download_url, full_path)
+            return True
+        except:
+            return False
+
     def read_url_from_file(self, file):
         try:
             f = open(file, "r")
@@ -121,7 +140,7 @@ class AliExpressScraper:
     def get_description(self):
         i = 0
         check = ""
-        while i < 5000:
+        while i < 2000:
             try:
                 self.description_element = self.driver.find_element_by_id("product-description")
                 check = self.description_element.text
@@ -269,23 +288,66 @@ class AliExpressScraper:
         f.write("\n\n---------DESCRIPTION-----------\n\n")
         f.write(self.information["description"])
 
+        print("---------------DOWNLOADING FILES------------------")
+
+        print("---------------images------------------")
+        loc = "Output/IMAGES/" + self.information["store"] + "/images"
+        try:
+            os.makedirs(loc)
+        except FileExistsError:
+            pass
+        self.download_location = loc
+        list_of_images = []
+        for img_elm in self.information["images"]:
+            list_of_images.append(img_elm.get_attribute("src"))
+        results = ThreadPool(5).imap_unordered(self.download_files, enumerate(list_of_images))
+        for result in results:
+            if result:
+                pass
+            else:
+                print("IMAGE NOT DOWNLOADED")
+        print("---------------images------------------")
+
+        print("---------------colors------------------")
+        loc = "Output/IMAGES/" + self.information["store"] + "/color"
+        try:
+            os.makedirs(loc)
+        except FileExistsError:
+            pass
+        self.download_location = loc
+        list_of_images = []
+        for img_elm in self.information["color_details"]:
+            list_of_images.append(img_elm[1])
+        results = ThreadPool(5).imap_unordered(self.download_files, enumerate(list_of_images))
+        for result in results:
+            if result:
+                pass
+            else:
+                print("IMAGE NOT DOWNLOADED")
+        print("---------------colors------------------")
+
     def terminate(self):
         self.driver.quit()
 
 
-# test = input("Enter URL to scrape : ")
+test = "https://www.aliexpress.com/item/4001051026485.html?spm=a2g0o.productlist.0.0.7df5ccb2zZiTEB&s=p&ad_pvid=202007052248174590920487854410017043611_3&algo_pvid=2cb4a5ce-b886-4f04-95cd-9123a0bf902f&algo_expid=2cb4a5ce-b886-4f04-95cd-9123a0bf902f-2&btsid=0be3743615940144978691860e8c10&ws_ab_test=searchweb0_0,searchweb201602_,searchweb201603_"
 # test = "https://www.aliexpress.com/item/4000411592783.html?spm=a2g0o.productlist.0.0.27eae7b8SJ75f6&s=p&ad_pvid=202007092234373867627591379420003663993_1&algo_pvid=e9dfc962-ad76-406a-82c7-eba6f3c67aa5&algo_expid=e9dfc962-ad76-406a-82c7-eba6f3c67aa5-0&btsid=0ab6fab215943592771575542e867d&ws_ab_test=searchweb0_0,searchweb201602_,searchweb201603_ "
 # test = "https://www.aliexpress.com/item/4000911368854.html?spm=a2g0o.productlist.0.0.6321e7b8lZ1xNh&algo_pvid=6e318c9b-c868-44d6-b321-78c194ae8f2f&algo_expid=6e318c9b-c868-44d6-b321-78c194ae8f2f-0&btsid=0ab6d69515944368163817904e975f&ws_ab_test=searchweb0_0,searchweb201602_,searchweb201603_"
-try:
-    f = open("debug.txt", "w+")
-except:
-    print("file not present")
-with open("aliexpressurl.txt") as links:
-    urls = links.readlines()
-    for url in urls:
-        try:
-            scrape = AliExpressScraper(url)
-        except:
-            f.write(url+"\n\n")
+scrape = AliExpressScraper(test)
+# try:
+#     f = open("debug.txt", "a+")
+# except:
+#     print("file not present")
+# with open("aliexpressurl.txt") as links:
+#     urls = links.readlines()
+#     for url in urls:
+#         try:
+#             scrape = AliExpressScraper(url)
+#         except KeyboardInterrupt:
+#             print("YOU QUIT THE PROGRAM")
+#             quit()
+#         except:
+#             raise
+#             f.write(url+"\n\n")
 # scrape.read_url_from_file(test)
 print("PLEASE CHECK \"Output\" DIRECTORY FOR TEXT FILES ")
