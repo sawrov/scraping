@@ -85,13 +85,10 @@ class AliExpressScraper:
 
     def download_files(self, Path):
         # regular expression to get the name of the file.
-        download_url = Path[1].replace(".jpg_50x50", "")
+        download_url = Path[1]
         reg = r'^(.*[\\\/])'
         filename = re.sub(reg, "", download_url)
         full_path = self.download_location + "/" + str(Path[0]) + filename
-        print(download_url)
-        print(full_path)
-        print("-----------")
         try:
             if os.path.isfile(full_path):
                 print("File Already Downloaded")
@@ -147,7 +144,8 @@ class AliExpressScraper:
             except:
                 pass
             self.driver.execute_script("window.scrollBy(0, arguments[0]);", i)
-            i = i + 10
+            i = i + 100
+            time.sleep(1)
             if check != "":
                 self.description_flag = True
                 break
@@ -299,7 +297,7 @@ class AliExpressScraper:
         self.download_location = loc
         list_of_images = []
         for img_elm in self.information["images"]:
-            list_of_images.append(img_elm.get_attribute("src"))
+            list_of_images.append(img_elm.get_attribute("src").replace(".jpg_50x50", ""))
         results = ThreadPool(5).imap_unordered(self.download_files, enumerate(list_of_images))
         for result in results:
             if result:
@@ -317,7 +315,7 @@ class AliExpressScraper:
         self.download_location = loc
         list_of_images = []
         for img_elm in self.information["color_details"]:
-            list_of_images.append(img_elm[1])
+            list_of_images.append(img_elm[1].replace(".jpg_50x50", ""))
         results = ThreadPool(5).imap_unordered(self.download_files, enumerate(list_of_images))
         for result in results:
             if result:
@@ -326,28 +324,51 @@ class AliExpressScraper:
                 print("IMAGE NOT DOWNLOADED")
         print("---------------colors------------------")
 
+        print("---------------images in desc--------------------")
+        list_of_images = []
+        try:
+            desc_img = self.driver.find_elements_by_xpath("//div[@id='product-description']//img")
+            loc = "Output/IMAGES/" + self.information["store"] + "/description"
+            try:
+                os.makedirs(loc)
+            except FileExistsError:
+                pass
+            self.download_location = loc
+            for img in desc_img:
+                list_of_images.append(img.get_attribute("src").replace(".jpg_120x120", ""))
+            results = ThreadPool(5).imap_unordered(self.download_files, enumerate(list_of_images))
+            for result in results:
+                if result:
+                    pass
+                else:
+                    print("IMAGE NOT DOWNLOADED")
+
+        except:
+            raise
+            print("NO IMAGES FOUND IN DESCRIPTION")
+
     def terminate(self):
         self.driver.quit()
 
 
-test = "https://www.aliexpress.com/item/4001051026485.html?spm=a2g0o.productlist.0.0.7df5ccb2zZiTEB&s=p&ad_pvid=202007052248174590920487854410017043611_3&algo_pvid=2cb4a5ce-b886-4f04-95cd-9123a0bf902f&algo_expid=2cb4a5ce-b886-4f04-95cd-9123a0bf902f-2&btsid=0be3743615940144978691860e8c10&ws_ab_test=searchweb0_0,searchweb201602_,searchweb201603_"
+#test = "https://www.aliexpress.com/item/4001051026485.html?spm=a2g0o.productlist.0.0.7df5ccb2zZiTEB&s=p&ad_pvid=202007052248174590920487854410017043611_3&algo_pvid=2cb4a5ce-b886-4f04-95cd-9123a0bf902f&algo_expid=2cb4a5ce-b886-4f04-95cd-9123a0bf902f-2&btsid=0be3743615940144978691860e8c10&ws_ab_test=searchweb0_0,searchweb201602_,searchweb201603_"
 # test = "https://www.aliexpress.com/item/4000411592783.html?spm=a2g0o.productlist.0.0.27eae7b8SJ75f6&s=p&ad_pvid=202007092234373867627591379420003663993_1&algo_pvid=e9dfc962-ad76-406a-82c7-eba6f3c67aa5&algo_expid=e9dfc962-ad76-406a-82c7-eba6f3c67aa5-0&btsid=0ab6fab215943592771575542e867d&ws_ab_test=searchweb0_0,searchweb201602_,searchweb201603_ "
 # test = "https://www.aliexpress.com/item/4000911368854.html?spm=a2g0o.productlist.0.0.6321e7b8lZ1xNh&algo_pvid=6e318c9b-c868-44d6-b321-78c194ae8f2f&algo_expid=6e318c9b-c868-44d6-b321-78c194ae8f2f-0&btsid=0ab6d69515944368163817904e975f&ws_ab_test=searchweb0_0,searchweb201602_,searchweb201603_"
-scrape = AliExpressScraper(test)
-# try:
-#     f = open("debug.txt", "a+")
-# except:
-#     print("file not present")
-# with open("aliexpressurl.txt") as links:
-#     urls = links.readlines()
-#     for url in urls:
-#         try:
-#             scrape = AliExpressScraper(url)
-#         except KeyboardInterrupt:
-#             print("YOU QUIT THE PROGRAM")
-#             quit()
-#         except:
-#             raise
-#             f.write(url+"\n\n")
-# scrape.read_url_from_file(test)
+#scrape = AliExpressScraper(test)
+try:
+    f = open("debug.txt", "a+")
+except:
+    print("file not present")
+with open("aliexpressurl.txt") as links:
+    urls = links.readlines()
+    for url in urls:
+        try:
+            scrape = AliExpressScraper(url)
+        except KeyboardInterrupt:
+            print("YOU QUIT THE PROGRAM")
+            quit()
+        except:
+            raise
+            f.write(url+"\n\n")
+scrape.read_url_from_file(test)
 print("PLEASE CHECK \"Output\" DIRECTORY FOR TEXT FILES ")
