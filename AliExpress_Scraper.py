@@ -11,33 +11,37 @@ import numpy as np
 import urllib.request as request
 from multiprocessing.pool import ThreadPool
 import requests.exceptions as RException
+from datetime import datetime
 
 
 class AliExpressScraper:
     current_url = ""
-    list_of_url = ""
     information = {}
     links_for_color = []
 
     # ----------Flags--------------
     # ----------Flags--------------
 
-    def __init__(self, url):
+    def __init__(self,start):
+        print("-----------------INITIALIZING SCRAPER--------------\n")
+
+        # -------initializing variables-----------------
         self.index = 0;
         self.description_element = None
         self.download_location = ""
-        print("-----------------INITIALIZING SCRAPER--------------\n")
-        # print(self.ascii_art)
-        # ----------Flags--------------
+
+        # ----------Declaring Flags--------------
         self.color_flag = False
         self.shipping_flag = False
         self.size_flag = False
         self.description_flag = False
         self.size_color_matrix_flag = False
-        self.output_text = "\t---------------------------------------------------------\n"
+        self.description_img_flag = False
+        # self.files_to_download_present = False
         # ----------Flags--------------
 
         # ---------MAKING DIRECTORY---------
+        self.log_dir = "Output/LOGS/" + start
 
         try:
             os.makedirs("Output/TEXT")
@@ -47,7 +51,19 @@ class AliExpressScraper:
             os.makedirs("Output/IMAGES")
         except FileExistsError:
             pass
+        try:
+            os.makedirs(self.log_dir)
+        except FileExistsError:
+            pass
         # ---------MAKING DIRECTORY---------
+
+        # ---------OPENING FILES -----------
+
+        self.successful_url = open(self.log_dir + "/Successful_url.txt", "a+")
+        self.unsuccessful_url = open(self.log_dir + "/Unsuccessful.txt", "a+")
+        self.variation_url = open(self.log_dir + "/New_variation_url.txt", "a+")
+
+        # ---------OPENING FILES -----------
 
         try:
             self.driver = webdriver.Chrome(ChromeDriverManager().install())
@@ -64,10 +80,27 @@ class AliExpressScraper:
             print("\nBROWSER CLOSED BEFORE SESSION WAS CREATED")
             exit()
 
-        if self.set_url(url):
-            if self.load_url():
-                self.show_info()
+    def start_scraping(self, url):
+        try:
+            if self.set_url(url):
+                if self.load_url():
+                    self.show_info()
+                    self.start_file_download()
+                    self.successful_url.write(url + "\n")
+                else:
+                    print("THAT")
+            else:
+                print("THIS")
+        except:
+            print("THERE WAS AN ISSUE SCRAPING THE LINK:\n")
+            self.unsuccessful_url.write(url + "\n")
+            print("THE URL HAS BEEN LOGGED")
+
+    def close_session(self):
         self.terminate()
+        self.successful_url.close()
+        self.unsuccessful_url.close()
+        self.variation_url.close()
 
     def set_url(self, url):
         if url:
@@ -98,24 +131,17 @@ class AliExpressScraper:
         except:
             return False
 
-    def read_url_from_file(self, file):
-        try:
-            f = open(file, "r")
-            self.list_of_url = f.read()
-            return True
-        except OSError:
-            print("\n\n" + file + "-----NOT FOUND")
-            return False
-
     def load_url(self):
         try:
             self.driver.get(self.current_url)
             _ = self.driver.find_element_by_xpath('//*[@id="root"]')
             try:
-                wait(self.driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, "next-dialog-body")))
+                wait(self.driver, 5).until(EC.presence_of_element_located((By.CLASS_NAME, "next-dialog-close")))
                 self.driver.find_element_by_class_name("next-dialog-close").click()
             except DriverExceptions.NoSuchElementException:
                 print("No POP-UP Detected")
+                pass
+            except DriverExceptions.TimeoutException:
                 pass
             finally:
                 self.update_basic_information()
@@ -141,14 +167,21 @@ class AliExpressScraper:
             try:
                 self.description_element = self.driver.find_element_by_id("product-description")
                 check = self.description_element.text
-            except:
+            except DriverExceptions.NoSuchElementException:
                 pass
             self.driver.execute_script("window.scrollBy(0, arguments[0]);", i)
             i = i + 100
-            time.sleep(1)
+            time.sleep(2)
             if check != "":
                 self.description_flag = True
                 break
+
+        try:
+            self.information["description_img"] = self.driver.find_elements_by_xpath(
+                "//div[@id='product-description']//img")
+            self.description_img_flag = True
+        except DriverExceptions.NoSuchElementException:
+            pass
 
         if self.description_flag:
             self.information["description"] = (re.sub(' +', ' ', self.description_element.text))
@@ -191,18 +224,20 @@ class AliExpressScraper:
                 for size in self.information["size_elements"]:
                     self.information["size_details"].append(size.text)
             else:
-                print("SAURAV HAS NOT ACCOUNTED FOR FOLLOWING VARIATION")
-                print(element.text)
-                print("INFORM HIM AND COPY THIS LINK")
+                print("\nNEW VARIATION DETECTED: URL NOTED")
+                self.variation_url.write(element.text + ":" + self.current_url + "\n")
         if self.color_flag and self.size_flag:
             self.price_for_size_and_colors()
 
-    def reset_buttons(self, elements):
+    @staticmethod
+    def reset_buttons(elements):
         for element in elements:
             if "selected" in element.get_attribute("class"):
                 element.click()
 
     def price_for_size_and_colors(self):
+        split_thin_line = self.driver.find_element_by_class_name("split-line-thin")
+        self.driver.execute_script("arguments[0].scrollIntoView();", split_thin_line)
 
         self.size_color_matrix_flag = True
         self.size_color_matrix = np.zeros(
@@ -281,14 +316,17 @@ class AliExpressScraper:
                 for j, price in enumerate(info_list):
                     f.write("\t\t FOR COLOR: " + self.information["color_details"][j][0] + "\n")
                     for k, l in enumerate(price):
-                        f.write("\t\t\t" + self.information["size_details"][k] + ":" + l.split("||")[0] + " QTY:" +
-                                l.split("||")[1] + "\n")
+                        try:
+                            f.write("\t\t\t" + self.information["size_details"][k] + ":" + l.split("||")[0] + " QTY:" +
+                                    l.split("||")[1] + "\n")
+                        except AttributeError:
+                            f.write("\t\t\t" + self.information["size_details"][k] + ":" + "NA\n")
         f.write("\n\n---------DESCRIPTION-----------\n\n")
         f.write(self.information["description"])
 
-        print("---------------DOWNLOADING FILES------------------")
-
-        print("---------------images------------------")
+    def start_file_download(self):
+        print("DOWNLOADING IMAGES")
+        # ("---------------images------------------")
         loc = "Output/IMAGES/" + self.information["store"] + "/images"
         try:
             os.makedirs(loc)
@@ -304,9 +342,9 @@ class AliExpressScraper:
                 pass
             else:
                 print("IMAGE NOT DOWNLOADED")
-        print("---------------images------------------")
+        # ("---------------images------------------")
 
-        print("---------------colors------------------")
+        # ("---------------colors------------------")
         loc = "Output/IMAGES/" + self.information["store"] + "/color"
         try:
             os.makedirs(loc)
@@ -320,55 +358,50 @@ class AliExpressScraper:
         for result in results:
             if result:
                 pass
-            else:
-                print("IMAGE NOT DOWNLOADED")
-        print("---------------colors------------------")
+        # ("---------------colors------------------")
 
-        print("---------------images in desc--------------------")
+        # ("---------------images in desc--------------------")
         list_of_images = []
-        try:
-            desc_img = self.driver.find_elements_by_xpath("//div[@id='product-description']//img")
+        if self.description_img_flag:
             loc = "Output/IMAGES/" + self.information["store"] + "/description"
             try:
                 os.makedirs(loc)
             except FileExistsError:
                 pass
             self.download_location = loc
-            for img in desc_img:
+            for img in self.information["description_img"]:
                 list_of_images.append(img.get_attribute("src").replace(".jpg_120x120", ""))
             results = ThreadPool(5).imap_unordered(self.download_files, enumerate(list_of_images))
             for result in results:
                 if result:
                     pass
-                else:
-                    print("IMAGE NOT DOWNLOADED")
-
-        except:
-            raise
-            print("NO IMAGES FOUND IN DESCRIPTION")
+            print("SCRAPING SUCCESSFULLY COMPLETED: " + self.current_url)
 
     def terminate(self):
         self.driver.quit()
 
 
-#test = "https://www.aliexpress.com/item/4001051026485.html?spm=a2g0o.productlist.0.0.7df5ccb2zZiTEB&s=p&ad_pvid=202007052248174590920487854410017043611_3&algo_pvid=2cb4a5ce-b886-4f04-95cd-9123a0bf902f&algo_expid=2cb4a5ce-b886-4f04-95cd-9123a0bf902f-2&btsid=0be3743615940144978691860e8c10&ws_ab_test=searchweb0_0,searchweb201602_,searchweb201603_"
+# test = "https://www.aliexpress.com/item/4000607551628.html?spm=2114.12010610.8148356.43.564e4db0e12tqe"
+# test = "https://www.aliexpress.com/item/32949506271.html?spm=a2g0o.productlist.0.0.3888e7b879Rcun&s=p&ad_pvid=202007052216005954785301924050015873321_1&algo_pvid=f893b3df-c6b9-4ebe-9a0a-8b6e8fadcd06&algo_expid=f893b3df-c6b9-4ebe-9"
+# test = "https://www.aliexpress.com/item/4001051026485.html?spm=a2g0o.productlist.0.0.7df5ccb2zZiTEB&s=p&ad_pvid=202007052248174590920487854410017043611_3&algo_pvid=2cb4a5ce-b886-4f04-95cd-9123a0bf902f&algo_expid=2cb4a5ce-b886-4f04-95cd-9123a0bf902f-2&btsid=0be3743615940144978691860e8c10&ws_ab_test=searchweb0_0,searchweb201602_,searchweb201603_"
 # test = "https://www.aliexpress.com/item/4000411592783.html?spm=a2g0o.productlist.0.0.27eae7b8SJ75f6&s=p&ad_pvid=202007092234373867627591379420003663993_1&algo_pvid=e9dfc962-ad76-406a-82c7-eba6f3c67aa5&algo_expid=e9dfc962-ad76-406a-82c7-eba6f3c67aa5-0&btsid=0ab6fab215943592771575542e867d&ws_ab_test=searchweb0_0,searchweb201602_,searchweb201603_ "
 # test = "https://www.aliexpress.com/item/4000911368854.html?spm=a2g0o.productlist.0.0.6321e7b8lZ1xNh&algo_pvid=6e318c9b-c868-44d6-b321-78c194ae8f2f&algo_expid=6e318c9b-c868-44d6-b321-78c194ae8f2f-0&btsid=0ab6d69515944368163817904e975f&ws_ab_test=searchweb0_0,searchweb201602_,searchweb201603_"
-#scrape = AliExpressScraper(test)
+# scrape.start_scraping(test)
 try:
     f = open("debug.txt", "a+")
-except:
+except FileNotFoundError:
     print("file not present")
+start=str(datetime.now().strftime("%b %d %Y %H-%M"))
 with open("aliexpressurl.txt") as links:
     urls = links.readlines()
     for url in urls:
         try:
-            scrape = AliExpressScraper(url)
+            print("TESTING URL: " + url)
+            scrape = AliExpressScraper(start)
+            scrape.start_scraping(url)
+            scrape.close_session()
+
         except KeyboardInterrupt:
             print("YOU QUIT THE PROGRAM")
             quit()
-        except:
-            raise
-            f.write(url+"\n\n")
-scrape.read_url_from_file(test)
 print("PLEASE CHECK \"Output\" DIRECTORY FOR TEXT FILES ")
