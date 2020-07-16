@@ -1,6 +1,6 @@
 import random
 
-class Key:
+class Key: 
 
 	def __init__(self, key = ''):
 		if key == '':
