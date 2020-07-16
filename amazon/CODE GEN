@@ -52,4 +52,4 @@ class Key:
 key = Key ('')
 print(key)
 # key = Key ('') LEAVE BLANK GEN CODE if PUT CODE CONFIRMS IF VALID OR INVALID
-#https://www.youtube.com/watch?v=IArt2Fgv644&t=153s
+#https://www.youtube.com/watch?v=IArt2Fgv644&t=153s 
