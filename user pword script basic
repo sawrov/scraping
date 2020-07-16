@@ -1,0 +1,10 @@
+username = input("Please enter your username: ")
+password = input("Please enter your password: ")
+
+if username == "Mathew" and password == "1234":
+    print("Welcome to DS WIZARD powered by BARGAIN BASEMENT AUSTRALIA!")
+
+else:
+    print("Login failed")
+
+quit()
