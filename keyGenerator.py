@@ -11,7 +11,7 @@ class Key:
 
     def verify(self):
         score = 0
-        check_digit = self.key[0]
+        check_digit = self.key[2]
         check_digit_count = 0
         chunks = self.key.split('-')
         for chunk in chunks:
@@ -21,7 +21,7 @@ class Key:
                 if char == check_digit:
                     check_digit_count += 1
                 score += ord(char)
-        if score == 1772 and check_digit_count == 5:
+        if score == 1872 and check_digit_count == 5:
             return True
         return False
 
@@ -51,5 +51,14 @@ class Key:
         return self.key.upper() + ':' + valid
 
 
-key = Key()
-print(key)
+keys = []
+no=int(input("How many keys do you want to generate: "))
+while len(keys) < no:
+    temp = Key()
+    if temp in keys:
+        pass
+    else:
+        print(temp)
+        keys.append(temp)
+
+print("THE LIST OF GENERATED KEYS ARE: \n")

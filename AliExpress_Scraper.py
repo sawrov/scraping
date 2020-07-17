@@ -14,6 +14,7 @@ import requests.exceptions as RException
 from datetime import datetime
 import schedule
 
+
 class AliExpressScraper:
     current_url = ""
     information = {}
@@ -411,10 +412,9 @@ def main():
     print("PLEASE CHECK \"Output\" DIRECTORY FOR TEXT FILES ")
 
 
-#cron job in here on main function
+# cron job in here on main function
 if __name__ == "__main__":
     main()
     schedule.every(10).minutes.do(main)
     while True:
         schedule.run_pending()
-
