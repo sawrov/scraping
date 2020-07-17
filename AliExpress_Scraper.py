@@ -389,7 +389,7 @@ class AliExpressScraper:
 # scrape.start_scraping(test)
 
 def main():
-    print("COOL")
+    # print("COOL")
     try:
         f = open("debug.txt", "a+")
     except FileNotFoundError:
@@ -407,11 +407,14 @@ def main():
             except KeyboardInterrupt:
                 print("YOU QUIT THE PROGRAM")
                 quit()
+            # except DriverExceptions.
     print("PLEASE CHECK \"Output\" DIRECTORY FOR TEXT FILES ")
 
 
 #cron job in here on main function
 if __name__ == "__main__":
-    # main()
-    schedule.every(10).seconds.do(main)
+    main()
+    schedule.every(10).minutes.do(main)
+    while True:
+        schedule.run_pending()
 
