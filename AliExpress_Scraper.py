@@ -12,7 +12,7 @@ import urllib.request as request
 from multiprocessing.pool import ThreadPool
 import requests.exceptions as RException
 from datetime import datetime
-
+import schedule
 
 class AliExpressScraper:
     current_url = ""
@@ -22,7 +22,7 @@ class AliExpressScraper:
     # ----------Flags--------------
     # ----------Flags--------------
 
-    def __init__(self,start):
+    def __init__(self, start):
         print("-----------------INITIALIZING SCRAPER--------------\n")
 
         # -------initializing variables-----------------
@@ -387,21 +387,30 @@ class AliExpressScraper:
 # test = "https://www.aliexpress.com/item/4000411592783.html?spm=a2g0o.productlist.0.0.27eae7b8SJ75f6&s=p&ad_pvid=202007092234373867627591379420003663993_1&algo_pvid=e9dfc962-ad76-406a-82c7-eba6f3c67aa5&algo_expid=e9dfc962-ad76-406a-82c7-eba6f3c67aa5-0&btsid=0ab6fab215943592771575542e867d&ws_ab_test=searchweb0_0,searchweb201602_,searchweb201603_ "
 # test = "https://www.aliexpress.com/item/4000911368854.html?spm=a2g0o.productlist.0.0.6321e7b8lZ1xNh&algo_pvid=6e318c9b-c868-44d6-b321-78c194ae8f2f&algo_expid=6e318c9b-c868-44d6-b321-78c194ae8f2f-0&btsid=0ab6d69515944368163817904e975f&ws_ab_test=searchweb0_0,searchweb201602_,searchweb201603_"
 # scrape.start_scraping(test)
-try:
-    f = open("debug.txt", "a+")
-except FileNotFoundError:
-    print("file not present")
-start=str(datetime.now().strftime("%b %d %Y %H-%M"))
-with open("aliexpressurl.txt") as links:
-    urls = links.readlines()
-    for url in urls:
-        try:
-            print("TESTING URL: " + url)
-            scrape = AliExpressScraper(start)
-            scrape.start_scraping(url)
-            scrape.close_session()
 
-        except KeyboardInterrupt:
-            print("YOU QUIT THE PROGRAM")
-            quit()
-print("PLEASE CHECK \"Output\" DIRECTORY FOR TEXT FILES ")
+def main():
+    print("COOL")
+    try:
+        f = open("debug.txt", "a+")
+    except FileNotFoundError:
+        print("file not present")
+    start = str(datetime.now().strftime("%b %d %Y %H-%M"))
+    with open("aliexpressurl.txt") as links:
+        urls = links.readlines()
+        for url in urls:
+            try:
+                print("TESTING URL: " + url)
+                scrape = AliExpressScraper(start)
+                scrape.start_scraping(url)
+                scrape.close_session()
+
+            except KeyboardInterrupt:
+                print("YOU QUIT THE PROGRAM")
+                quit()
+    print("PLEASE CHECK \"Output\" DIRECTORY FOR TEXT FILES ")
+
+
+if __name__ == "__main__":
+    # main()
+    schedule.every(10).seconds.do(main)
+
