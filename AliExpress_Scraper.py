@@ -410,6 +410,7 @@ def main():
     print("PLEASE CHECK \"Output\" DIRECTORY FOR TEXT FILES ")
 
 
+#cron job in here on main function
 if __name__ == "__main__":
     # main()
     schedule.every(10).seconds.do(main)
