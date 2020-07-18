@@ -1,15 +1,13 @@
-print("DS WIZARD powered by BARGAIN BASEMENT AUSTRALIA")
-print("https://www.bargainbasementaustralia.com/")
-
-
-print("***ADD ON*** ")
-print("DROP SHIP - AMAZON - SAFE BROWSER")
+print("DROP SHIP - SAFE BROWSER ***ADD ON*** ")
 print("Drop shipping, with ease of browsing Ebay")
+print("https://www.bargainbasementaustralia.com/")
+print('DS Wizard powered by BARGAIN BASEMENT AUSTRALIA')
+
+
 
 print("Let us begin and change IP'S @ Random for you, please don't exit the system until it loads and then once finished simply exit")
-
-
 print("Let's change proxy ip now")
+
 
 #KEYGEN-------
 
@@ -69,7 +67,7 @@ class Random_Proxy(object):
         number = random.randint(0, len(z)-50)
         ip_random = z[number]
 
-        # convert Tuple into String and formart IP and PORT Address
+        # convert Tuple into String and format IP and PORT Address
         ip_random_string = "{}:{}".format(ip_random[0],ip_random[1])
 
         # Create a Proxy
@@ -97,7 +95,7 @@ class Random_Proxy(object):
                 pass
 
 proxy = Random_Proxy()
-r = proxy.Proxy_Request(url='https://www.ebay.com.au/', request_type='get')
+r = proxy.Proxy_Request(url='https://www.ebay.com', request_type='get')
 print(r.text)
 
 
@@ -112,7 +110,7 @@ print(r.text)
 # Create a class
 proxy = Random_Proxy()
 
-url = 'https://www.ebay.com.au/'
+url = 'https://www.ebay.com'
 request_type = "get"
 
 r = proxy.Proxy_Request(url=url, request_type=request_type)
@@ -120,8 +118,61 @@ print(r)
 #line 80 & 95 input url u wish to change proxy
 
 
-#------change user agent ------
-
 print("Now Let's change how the user agent reads")
 
-print("Changing now please wait, and do not exit, one moment please just about finshed up!")
+print("Changing now please wait, and do not exit, one moment please just about finished up!")
+
+print("WAIT PLEASE WAIT")
+
+print("***ALL DONE***")
+print("SAFE TO USE THE  SPECIFIED URL ONLY")
+print("ONLY THIS URL WILL CHANGE IP AND USER AGENT")
+print(r)
+
+
+#------------------change user agent------------------
+
+import requests
+from bs4 import BeautifulSoup
+
+url = "https://www.ebay.com"
+
+headers = {"User-Agent":""}
+
+r = requests.get(url, headers=headers)
+
+#soup = BeautifulSoup(r.content, features="1xm1")       <-----HOW TO COMPLETE FEATURES= IS IST 1 OR L NEED GET PATH*******************
+
+from selenium import webdriver
+from webdriver_manager.chrome import ChromeDriverManager
+
+
+driver = webdriver.Chrome(ChromeDriverManager().install())
+driver.set_window_position(0, 0)
+driver.set_window_size(1920, 1024)
+
+# -------------HouseKeeping-----------
+
+driver.get("https://www.ebay.com")
+#proxy and request from bs4 & request lig
+proxy = Random_Proxy()
+r = proxy.Proxy_Request(url='https://www.ebay.com', request_type='get')
+print(r.text)
+
+# Create a class
+proxy = Random_Proxy()
+
+url = 'https://www.ebay.com'
+request_type = "get"
+
+
+#PROXY DETAILS
+r = proxy.Proxy_Request(url=url, request_type=request_type)
+print(r)
+
+print("Tell others about us & enjoy")
+print("****THANK YOU****")
+
+#98 & 113 approx u will see other url need to change as per line 178 approx
+# I NEED TO MAKE AVAIL 4 URL .AU .US. .UK EVERY COUNTRY not just .com
+
