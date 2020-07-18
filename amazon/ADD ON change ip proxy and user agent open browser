@@ -136,12 +136,12 @@ import requests
 from bs4 import BeautifulSoup
 
 url = "https://www.ebay.com"
-
-headers = {"User-Agent":""}
+# *********************************need fix****************headers string "input headers user agent ???"
+headers = {"User-Agent":"        ??????????????????????????????????????????        "}
 
 r = requests.get(url, headers=headers)
 
-#soup = BeautifulSoup(r.content, features="1xm1")       <-----HOW TO COMPLETE FEATURES= IS IST 1 OR L NEED GET PATH*******************
+#soup = BeautifulSoup(r.content, features="1xm1")       <-----HOW TO COMPLETE FEATURES or just ignore and delete it not relevant  NEED GET PATH******""1xm1"????*************
 
 from selenium import webdriver
 from webdriver_manager.chrome import ChromeDriverManager
@@ -154,7 +154,8 @@ driver.set_window_size(1920, 1024)
 # -------------HouseKeeping-----------
 
 driver.get("https://www.ebay.com")
-#proxy and request from bs4 & request lig
+
+#proxy and request from bs4 & requests also
 proxy = Random_Proxy()
 r = proxy.Proxy_Request(url='https://www.ebay.com', request_type='get')
 print(r.text)
