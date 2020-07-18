@@ -1,0 +1,127 @@
+print("DS WIZARD powered by BARGAIN BASEMENT AUSTRALIA")
+print("https://www.bargainbasementaustralia.com/")
+
+
+print("***ADD ON*** ")
+print("DROP SHIP - AMAZON - SAFE BROWSER")
+print("Drop shipping, with ease of browsing Ebay")
+
+print("Let us begin and change IP'S @ Random for you, please don't exit the system until it loads and then once finished simply exit")
+
+
+print("Let's change proxy ip now")
+
+#KEYGEN-------
+
+
+#SELFDESTRUCT FILE X DAYS---------
+
+
+
+#------change proxy to url u need------
+try:
+
+    import requests
+    from bs4 import BeautifulSoup
+    import random
+
+except:
+    print(" Library Not Found !")
+
+
+class Random_Proxy(object):
+
+    def __init__(self):
+        self.__url = 'https://www.sslproxies.org/'
+        self.__headers = {
+            'Accept-Encoding': 'gzip, deflate, sdch',
+            'Accept-Language': 'en-US,en;q=0.8',
+            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36',
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+            'Referer': 'http://www.wikipedia.org/',
+            'Connection': 'keep-alive',
+            }
+        self.random_ip = []
+        self.random_port = []
+
+    def __random_proxy(self):
+
+        """
+        This is Private Function Client Should not have accesss
+        :return: Dictionary object of Random proxy and port number
+        """
+
+        r = requests.get(url=self.__url, headers=self.__headers)
+        soup = BeautifulSoup(r.text, 'html.parser')
+
+        # Get the Random IP Address
+        for x in soup.findAll('td')[::8]:
+            self.random_ip.append(x.get_text())
+
+        # Get Their Port
+        for y in soup.findAll('td')[1::8]:
+            self.random_port.append(y.get_text())
+
+        # Zip together
+        z = list(zip(self.random_ip, self.random_port))
+
+        # This will Fetch Random IP Address and corresponding PORT Number
+        number = random.randint(0, len(z)-50)
+        ip_random = z[number]
+
+        # convert Tuple into String and formart IP and PORT Address
+        ip_random_string = "{}:{}".format(ip_random[0],ip_random[1])
+
+        # Create a Proxy
+        proxy = {'https':ip_random_string}
+
+        # return Proxy
+        return proxy
+
+    def Proxy_Request(self,request_type='get',url='',**kwargs):
+        """
+
+        :param request_type: GET, POST, PUT
+        :param url: URL from which you want to do webscrapping
+        :param kwargs: any other parameter you pass
+        :return: Return Response
+        """
+        while True:
+            try:
+                proxy = self.__random_proxy()
+                print("Using Proxy {}".format(proxy))
+                r = requests.request(request_type,url,proxies=proxy,headers=self.__headers ,timeout=8, **kwargs)
+                return r
+                break
+            except:
+                pass
+
+proxy = Random_Proxy()
+r = proxy.Proxy_Request(url='https://www.ebay.com.au/', request_type='get')
+print(r.text)
+
+
+#https://www.youtube.com/watch?v=_z4DhRUg2Vs
+#blog post below link on above youtube video
+# #https://soumilshah1995.blogspot.com/2019/05/smart-proxy-library-to-get-random-proxy.html
+
+#if else fails solution?
+# https://github.com/soumilshah1995/Smart-Proxy-for-Webscapping-BeautifulSoup/blob/master/smartproxy/setup.py
+
+
+# Create a class
+proxy = Random_Proxy()
+
+url = 'https://www.ebay.com.au/'
+request_type = "get"
+
+r = proxy.Proxy_Request(url=url, request_type=request_type)
+print(r)
+#line 80 & 95 input url u wish to change proxy
+
+
+#------change user agent ------
+
+print("Now Let's change how the user agent reads")
+
+print("Changing now please wait, and do not exit, one moment please just about finshed up!")
