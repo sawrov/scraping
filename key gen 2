@@ -1,0 +1,30 @@
+import random
+import pyperclip
+
+#generate Keys
+def keygen():
+    key = (f'{random.randrange(1000, 9999)}-{random.randrange(1000, 9999)}-{random.randrange(1000, 9999)}-{random.randrange(1000, 9999)}')
+    print(key + "|copied to clipboard")
+
+
+#copy to clip board
+    pyperclip.copy(key)
+
+
+while True:
+    user=input(">>>")
+
+    if user == "":
+        keygen()
+
+    elif user == "exit":
+        exit()
+
+    else:
+        print("unknown command")
+
+# https://www.youtube.com/watch?v=fJV2K5MqzTE
+
+
+
+
