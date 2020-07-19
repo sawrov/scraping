@@ -412,9 +412,42 @@ def main():
     print("PLEASE CHECK \"Output\" DIRECTORY FOR TEXT FILES ")
 
 
+def verify(key):
+    print(key)
+    score = 0
+    check_digit = key[2]
+    check_digit_count = 0
+    chunks = key.split('-')
+    for chunk in chunks:
+        if len(chunk) != 4:
+            return False
+        for char in chunk:
+            if char == check_digit:
+                check_digit_count += 1
+            score += ord(char)
+    print (score)
+    if score == 1392 and check_digit_count == 5:
+        return True
+    return False
+
+
+def validate_user():
+    while True:
+        key = input("PLEASE ENTER A VALID KEY TO RUN THE PROGRAM:  ")
+        try:
+            if verify(key):
+                print("KEY VALID:")
+                return True
+            else:
+                print("INVALID KEY, PLEASE ENTER A VALID KEY TO RUN THE PROGRAM\n")
+        except IndexError:
+            print("PLEASE ENTER A VALID KEY\n")
+
+
 # cron job in here on main function
 if __name__ == "__main__":
-    main()
-    schedule.every(10).minutes.do(main)
-    while True:
-        schedule.run_pending()
+    if validate_user():
+        main()
+        schedule.every(10).minutes.do(main)
+        while True:
+            schedule.run_pending()
