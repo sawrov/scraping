@@ -21,7 +21,7 @@ class Key:
                 if char == check_digit:
                     check_digit_count += 1
                 score += ord(char)
-        if score == 1872 and check_digit_count == 5:
+        if score == 1392 and check_digit_count == 5:
             return True
         return False
 
