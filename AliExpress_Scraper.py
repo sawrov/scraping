@@ -425,8 +425,7 @@ def verify(key):
             if char == check_digit:
                 check_digit_count += 1
             score += ord(char)
-    print (score)
-    if score == 1392 and check_digit_count == 5:
+    if score == 1672 and check_digit_count == 5:
         return True
     return False
 
@@ -435,7 +434,7 @@ def validate_user():
     while True:
         key = input("PLEASE ENTER A VALID KEY TO RUN THE PROGRAM:  ")
         try:
-            if verify(key):
+            if verify(key.lower()):
                 print("KEY VALID:")
                 return True
             else:

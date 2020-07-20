@@ -21,7 +21,7 @@ class Key:
                 if char == check_digit:
                     check_digit_count += 1
                 score += ord(char)
-        if score == 1392 and check_digit_count == 5:
+        if score == 1672 and check_digit_count == 5:
             return True
         return False
 
@@ -51,6 +51,10 @@ class Key:
         return self.key.upper() + ':' + valid
 
 
+
+
+# check=key()
+# check.verify(key)
 keys = []
 no=int(input("How many keys do you want to generate: "))
 while len(keys) < no:
@@ -61,4 +65,3 @@ while len(keys) < no:
         print(temp)
         keys.append(temp)
 
-print("THE LIST OF GENERATED KEYS ARE: \n")
