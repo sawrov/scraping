@@ -1,6 +1,6 @@
 NAME:	CAMEL Men Women High Top Hiking Shoes 2019 Durable Waterproof Anti-Slip Outdoor Climbing Trekking Shoes Military Tactical Boots
 STORE:	Camel Official Store
-BASE-PRICE:	US $61.31
+BASE-PRICE:	US $58.24
 
 SHIPPING INFORMATION: 
 Free Shipping 
@@ -22,50 +22,50 @@ VARIATION IN PRICES:
 			6:NA
 			6.5:NA
 			7:NA
-			7.5:US $61.31 QTY:Only 1 left 
-			8:US $61.31 QTY:Only 1 left 
-			8.5:US $61.31 QTY:58
+			7.5:NA
+			8:US $58.24 QTY:Only 4 left (1 piece at most per customer)
+			8.5:US $58.24 QTY:20(1 piece at most per customer)
 			9:NA
 		 FOR COLOR: Male-Dark Khaki
 			4.5:NA
 			5:NA
 			5.5:NA
-			6:US $61.31 QTY:181
-			6.5:US $61.31 QTY:450
-			7:US $61.31 QTY:1069
-			7.5:US $61.31 QTY:1699
-			8:US $61.31 QTY:1811
-			8.5:US $61.31 QTY:1526
-			9:US $61.31 QTY:687
+			6:US $58.24 QTY:100(1 piece at most per customer)
+			6.5:US $58.24 QTY:100(1 piece at most per customer)
+			7:US $58.24 QTY:100(1 piece at most per customer)
+			7.5:US $58.24 QTY:100(1 piece at most per customer)
+			8:US $58.24 QTY:100(1 piece at most per customer)
+			8.5:US $58.24 QTY:100(1 piece at most per customer)
+			9:US $58.24 QTY:100(1 piece at most per customer)
 		 FOR COLOR: Male-Army Green
 			4.5:NA
 			5:NA
 			5.5:NA
-			6:US $61.31 QTY:Only 2 left 
-			6.5:US $61.31 QTY:43
-			7:US $61.31 QTY:83
-			7.5:US $61.31 QTY:80
-			8:US $61.31 QTY:186
-			8.5:US $61.31 QTY:147
-			9:US $61.31 QTY:56
+			6:NA
+			6.5:US $58.24 QTY:20(1 piece at most per customer)
+			7:US $58.24 QTY:Only 10 left (1 piece at most per customer)
+			7.5:US $58.24 QTY:Only 10 left (1 piece at most per customer)
+			8:US $58.24 QTY:100(1 piece at most per customer)
+			8.5:US $58.24 QTY:40(1 piece at most per customer)
+			9:US $58.24 QTY:20(1 piece at most per customer)
 		 FOR COLOR: Female-Coffee
-			4.5:US $61.31 QTY:85
-			5:US $61.31 QTY:229
-			5.5:US $61.31 QTY:314
-			6:US $61.31 QTY:332
-			6.5:US $61.31 QTY:238
-			7:US $61.31 QTY:143
+			4.5:US $58.24 QTY:Only 10 left (1 piece at most per customer)
+			5:US $58.24 QTY:100(1 piece at most per customer)
+			5.5:US $58.24 QTY:100(1 piece at most per customer)
+			6:US $58.24 QTY:100(1 piece at most per customer)
+			6.5:US $58.24 QTY:100(1 piece at most per customer)
+			7:US $58.24 QTY:40(1 piece at most per customer)
 			7.5:NA
 			8:NA
 			8.5:NA
 			9:NA
 		 FOR COLOR: Female-Black
-			4.5:US $61.31 QTY:37
-			5:US $61.31 QTY:178
-			5.5:US $61.31 QTY:267
-			6:US $61.31 QTY:316
-			6.5:US $61.31 QTY:154
-			7:US $61.31 QTY:103
+			4.5:US $58.24 QTY:20(1 piece at most per customer)
+			5:US $58.24 QTY:100(1 piece at most per customer)
+			5.5:US $58.24 QTY:100(1 piece at most per customer)
+			6:US $58.24 QTY:100(1 piece at most per customer)
+			6.5:US $58.24 QTY:40(1 piece at most per customer)
+			7:US $58.24 QTY:20(1 piece at most per customer)
 			7.5:NA
 			8:NA
 			8.5:NA

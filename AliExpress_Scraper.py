@@ -13,6 +13,7 @@ from multiprocessing.pool import ThreadPool
 import requests.exceptions as RException
 from datetime import datetime
 import schedule
+import csv
 
 
 class AliExpressScraper:
@@ -23,7 +24,7 @@ class AliExpressScraper:
     # ----------Flags--------------
     # ----------Flags--------------
 
-    def __init__(self, start):
+    def __init__(self, folder_name):
         print("-----------------INITIALIZING SCRAPER--------------\n")
 
         # -------initializing variables-----------------
@@ -42,7 +43,7 @@ class AliExpressScraper:
         # ----------Flags--------------
 
         # ---------MAKING DIRECTORY---------
-        self.log_dir = "Output/LOGS/" + start
+        self.log_dir = "Output/LOGS/" + folder_name
 
         try:
             os.makedirs("Output/TEXT")
@@ -96,6 +97,7 @@ class AliExpressScraper:
             print("THERE WAS AN ISSUE SCRAPING THE LINK:\n")
             self.unsuccessful_url.write(url + "\n")
             print("THE URL HAS BEEN LOGGED")
+            raise
 
     def close_session(self):
         self.terminate()
@@ -125,7 +127,7 @@ class AliExpressScraper:
         full_path = self.download_location + "/" + str(Path[0]) + filename
         try:
             if os.path.isfile(full_path):
-                print("File Already Downloaded")
+                pass
             else:
                 request.urlretrieve(download_url, full_path)
             return True
@@ -284,6 +286,11 @@ class AliExpressScraper:
     def show_info(self):
         self.get_variations()
         self.get_description()
+
+        # csv file open
+        Csv = open('output.csv', 'w')
+        writer = csv.writer(Csv)
+
         f = open("Output/TEXT/" + str(self.information["title"]) + ".txt", "w+")
         f.write("NAME:\t" + self.information["title"] + "\n")
         f.write("STORE:\t" + self.information["store"] + "\n")
@@ -316,12 +323,17 @@ class AliExpressScraper:
                     "\t FROM:" + self.information["shipping_details"][i].split(":->")[0] + "\n")
                 for j, price in enumerate(info_list):
                     f.write("\t\t FOR COLOR: " + self.information["color_details"][j][0] + "\n")
+                    csv_color = self.information["color_details"][j][0]
+                    print(csv_color)
                     for k, l in enumerate(price):
                         try:
+                            csv_size=self.information["size_details"][k]
                             f.write("\t\t\t" + self.information["size_details"][k] + ":" + l.split("||")[0] + " QTY:" +
                                     l.split("||")[1] + "\n")
+                            writer.writerow([str(self.current_url),self.information["title"], self.information["store"], csv_color, csv_size,l.split("||")[0],l.split("||")[1]])
                         except AttributeError:
                             f.write("\t\t\t" + self.information["size_details"][k] + ":" + "NA\n")
+                            writer.writerow([str(self.current_url),self.information["title"], self.information["store"], csv_color, csv_size,"NA","NA"])
         f.write("\n\n---------DESCRIPTION-----------\n\n")
         f.write(self.information["description"])
 
@@ -395,13 +407,13 @@ def main():
         f = open("debug.txt", "a+")
     except FileNotFoundError:
         print("file not present")
-    start = str(datetime.now().strftime("%b %d %Y %H-%M"))
-    with open("aliexpressurl.txt") as links:
+    folder_name = str(datetime.now().strftime("%b %d %Y %H-%M"))
+    with open("oneurl.txt") as links:
         urls = links.readlines()
         for url in urls:
             try:
                 print("TESTING URL: " + url)
-                scrape = AliExpressScraper(start)
+                scrape = AliExpressScraper(folder_name)
                 scrape.start_scraping(url)
                 scrape.close_session()
 
@@ -445,8 +457,8 @@ def validate_user():
 
 # cron job in here on main function
 if __name__ == "__main__":
-    if validate_user():
-        main()
-        schedule.every(10).minutes.do(main)
-        while True:
-            schedule.run_pending()
+    # if validate_user():
+    main()
+    # schedule.every(10).minutes.do(main)
+    # while True:
+    #     schedule.run_pending()

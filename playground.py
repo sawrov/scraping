@@ -1,13 +1,7 @@
-import urllib.request
-import re
-from multiprocessing.pool import ThreadPool
-
-def this(check):
-    print(check[0])
-    return "THIS"
-
-list_of_pictures = ["this","that"]
-results = ThreadPool(5).imap_unordered(this,enumerate(list_of_pictures))
-for i in results:
-    print(i)
-
+import csv
+with open('innovators.csv', 'w', newline='') as file:
+    writer = csv.writer(file)
+    writer.writerow(["SN", "Name", "Contribution"])
+    writer.writerow([1, "Linus Torvalds", "Linux Kernel"])
+    writer.writerow([2, "Tim Berners-Lee", "World Wide Web"])
+    writer.writerow([3, "Guido van Rossum", "Python Programming"])
