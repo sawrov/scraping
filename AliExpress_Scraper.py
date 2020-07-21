@@ -24,7 +24,7 @@ class AliExpressScraper:
     # ----------Flags--------------
     # ----------Flags--------------
 
-    def __init__(self, folder_name):
+    def __init__(self, folder_name, csv_writer):
         print("-----------------INITIALIZING SCRAPER--------------\n")
 
         # -------initializing variables-----------------
@@ -41,7 +41,7 @@ class AliExpressScraper:
         self.description_img_flag = False
         # self.files_to_download_present = False
         # ----------Flags--------------
-
+        self.writer = csv_writer
         # ---------MAKING DIRECTORY---------
         self.log_dir = "Output/LOGS/" + folder_name
 
@@ -97,7 +97,6 @@ class AliExpressScraper:
             print("THERE WAS AN ISSUE SCRAPING THE LINK:\n")
             self.unsuccessful_url.write(url + "\n")
             print("THE URL HAS BEEN LOGGED")
-            raise
 
     def close_session(self):
         self.terminate()
@@ -287,10 +286,6 @@ class AliExpressScraper:
         self.get_variations()
         self.get_description()
 
-        # csv file open
-        Csv = open('output.csv', 'w')
-        writer = csv.writer(Csv)
-
         f = open("Output/TEXT/" + str(self.information["title"]) + ".txt", "w+")
         f.write("NAME:\t" + self.information["title"] + "\n")
         f.write("STORE:\t" + self.information["store"] + "\n")
@@ -327,13 +322,17 @@ class AliExpressScraper:
                     print(csv_color)
                     for k, l in enumerate(price):
                         try:
-                            csv_size=self.information["size_details"][k]
+                            csv_size = self.information["size_details"][k]
                             f.write("\t\t\t" + self.information["size_details"][k] + ":" + l.split("||")[0] + " QTY:" +
                                     l.split("||")[1] + "\n")
-                            writer.writerow([str(self.current_url),self.information["title"], self.information["store"], csv_color, csv_size,l.split("||")[0],l.split("||")[1]])
+                            self.writer.writerow(
+                                [str(self.current_url), self.information["title"], self.information["store"], csv_color,
+                                 csv_size, l.split("||")[0], l.split("||")[1]])
                         except AttributeError:
                             f.write("\t\t\t" + self.information["size_details"][k] + ":" + "NA\n")
-                            writer.writerow([str(self.current_url),self.information["title"], self.information["store"], csv_color, csv_size,"NA","NA"])
+                            self.writer.writerow(
+                                [str(self.current_url), self.information["title"], self.information["store"], csv_color,
+                                 csv_size, "NA", "NA"])
         f.write("\n\n---------DESCRIPTION-----------\n\n")
         f.write(self.information["description"])
 
@@ -408,12 +407,15 @@ def main():
     except FileNotFoundError:
         print("file not present")
     folder_name = str(datetime.now().strftime("%b %d %Y %H-%M"))
-    with open("oneurl.txt") as links:
+    # csv file open
+    Csv = open("Output/"+str(folder_name)+'output.csv', 'w')
+    csv_writer = csv.writer(Csv)
+    with open("aliexpressurl.txt") as links:
         urls = links.readlines()
         for url in urls:
             try:
                 print("TESTING URL: " + url)
-                scrape = AliExpressScraper(folder_name)
+                scrape = AliExpressScraper(folder_name, csv_writer)
                 scrape.start_scraping(url)
                 scrape.close_session()
 
