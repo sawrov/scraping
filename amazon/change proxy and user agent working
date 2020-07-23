@@ -1,0 +1,49 @@
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from webdriver_manager.chrome import ChromeDriverManager
+import time
+
+
+#-------------user agent changer--------------
+url = 'https://www.whatismybrowser.com/detect/what-is-my-user-agent'
+user_agent = 'THIS IS MY USER AGENT STRING'
+#  user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:72.0) Gecko/20100101 Firefox/72.0'
+#  user_agent = 'AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0'
+
+driver = webdriver.Chrome(ChromeDriverManager().install())
+
+
+opts = Options()
+opts.add_argument("user-agent=" + user_agent)
+driver = webdriver.Chrome(options=opts)
+driver.get(url)
+String_userAgent = driver.execute_script("return navigator.userAgent")
+print(String_userAgent)
+
+
+
+#----------------Proxy Changer---------------
+# LIST PROXY   http://spys.one/en/https-ssl-proxy/
+PROXY = "123.231.171.11:8080"
+webdriver.DesiredCapabilities.CHROME['proxy']={
+    "httpProxy":PROXY,
+    "ftpProxy":PROXY,
+    "sslProxy":PROXY,
+    "noProxy":None,
+    "proxyType":"MANUAL",
+    "autodetect":False
+}
+
+driver = webdriver.Chrome(ChromeDriverManager().install())
+time.sleep(15)
+driver.get('https://whatismyipaddress.com/')
+
+print(PROXY)
+
+# see commment 6     https://stackoverflow.com/questions/17082425/running-selenium-webdriver-with-a-proxy-in-python
+
+
+
+
+
+
