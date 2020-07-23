@@ -1,179 +1,75 @@
-print("DROP SHIP - SAFE BROWSER ***ADD ON*** ")
-print("Drop shipping, with ease of browsing Ebay")
-print("https://www.bargainbasementaustralia.com/")
-print('DS Wizard powered by BARGAIN BASEMENT AUSTRALIA')
-
-
-
-print("Let us begin and change IP'S @ Random for you, please don't exit the system until it loads and then once finished simply exit")
-print("Let's change proxy ip now")
-
-
-#KEYGEN-------
-
-
-#SELFDESTRUCT FILE X DAYS---------
-
-
-
-#------change proxy to url u need------
-try:
-
-    import requests
-    from bs4 import BeautifulSoup
-    import random
-
-except:
-    print(" Library Not Found !")
-
-
-class Random_Proxy(object):
-
-    def __init__(self):
-        self.__url = 'https://www.sslproxies.org/'
-        self.__headers = {
-            'Accept-Encoding': 'gzip, deflate, sdch',
-            'Accept-Language': 'en-US,en;q=0.8',
-            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36',
-            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-            'Referer': 'http://www.wikipedia.org/',
-            'Connection': 'keep-alive',
-            }
-        self.random_ip = []
-        self.random_port = []
-
-    def __random_proxy(self):
-
-        """
-        This is Private Function Client Should not have accesss
-        :return: Dictionary object of Random proxy and port number
-        """
-
-        r = requests.get(url=self.__url, headers=self.__headers)
-        soup = BeautifulSoup(r.text, 'html.parser')
-
-        # Get the Random IP Address
-        for x in soup.findAll('td')[::8]:
-            self.random_ip.append(x.get_text())
-
-        # Get Their Port
-        for y in soup.findAll('td')[1::8]:
-            self.random_port.append(y.get_text())
-
-        # Zip together
-        z = list(zip(self.random_ip, self.random_port))
-
-        # This will Fetch Random IP Address and corresponding PORT Number
-        number = random.randint(0, len(z)-50)
-        ip_random = z[number]
-
-        # convert Tuple into String and format IP and PORT Address
-        ip_random_string = "{}:{}".format(ip_random[0],ip_random[1])
-
-        # Create a Proxy
-        proxy = {'https':ip_random_string}
-
-        # return Proxy
-        return proxy
-
-    def Proxy_Request(self,request_type='get',url='',**kwargs):
-        """
-
-        :param request_type: GET, POST, PUT
-        :param url: URL from which you want to do webscrapping
-        :param kwargs: any other parameter you pass
-        :return: Return Response
-        """
-        while True:
-            try:
-                proxy = self.__random_proxy()
-                print("Using Proxy {}".format(proxy))
-                r = requests.request(request_type,url,proxies=proxy,headers=self.__headers ,timeout=8, **kwargs)
-                return r
-                break
-            except:
-                pass
-
-proxy = Random_Proxy()
-r = proxy.Proxy_Request(url='https://www.ebay.com', request_type='get')
-print(r.text)
-
-
-#https://www.youtube.com/watch?v=_z4DhRUg2Vs
-#blog post below link on above youtube video
-# #https://soumilshah1995.blogspot.com/2019/05/smart-proxy-library-to-get-random-proxy.html
-
-#if else fails solution?
-# https://github.com/soumilshah1995/Smart-Proxy-for-Webscapping-BeautifulSoup/blob/master/smartproxy/setup.py
-
-
-# Create a class
-proxy = Random_Proxy()
-
-url = 'https://www.ebay.com'
-request_type = "get"
-
-r = proxy.Proxy_Request(url=url, request_type=request_type)
-print(r)
-#line 80 & 95 input url u wish to change proxy
-
-
-print("Now Let's change how the user agent reads")
-
-print("Changing now please wait, and do not exit, one moment please just about finished up!")
-
-print("WAIT PLEASE WAIT")
-
-print("***ALL DONE***")
-print("SAFE TO USE THE  SPECIFIED URL ONLY")
-print("ONLY THIS URL WILL CHANGE IP AND USER AGENT")
-print(r)
-
-
-#------------------change user agent------------------
-
-import requests
-from bs4 import BeautifulSoup
-
-url = "https://www.ebay.com"
-# *********************************need fix****************headers string "input headers user agent ???"
-headers = {"User-Agent":"        ??????????????????????????????????????????        "}
-
-r = requests.get(url, headers=headers)
-
-#soup = BeautifulSoup(r.content, features="1xm1")       <-----HOW TO COMPLETE FEATURES or just ignore and delete it not relevant  NEED GET PATH******""1xm1"????*************
-
 from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
+import time
 
 
+print("DS Wizard powered by BARGAIN BASEMENT AUSTRALIA")
+print("***ADD ON***")
+print("Hide Identity for (USER AGENT) & (PROXY IP) ")
+
+print("STEP 1 OUT OF 2")
+print("Enter or leave blank (USER AGENT)")
+
+print("Step 1 - easy simply just change user agent name")
+print("Step 2 - not easy, must search proxy ip list")
+print("A proxy server is basically a computer on the internet with its own IP address that your computer knows. When you send a web request, your request goes to the proxy server first. ... A proxy server can change your IP address, so the web server doesn't know exactly where you are in the world.")
+print("Get lists online just search it or from example: http://spys.one/en/https-ssl-proxy/")
+print("Now enter the ip address to change it")
+print("WAIT")
+print("Possible error not to worry, ok. If the page loads in error its from 2 factors they are;")
+print("ERROR: (1) if browser says 502 error or like error or No internet-Hit refresh in browser as the new proxy ip just needs refresh page, thats it")
+print("ERROR: (2) the ip selected is not working, simply use another")
+print("NOTE: Once step 1 is done - user agent details in browser header settings will set as you desire")
+print("NOTE: Enter Proxy IP - Step 2 WAIT for next browser to open to see if PROXY IP is changed or need to get another PROXY IP & RUN PROGRAM AGAIN, to change it")
+print("NOTE: Set PROXY IP in SAME COUNTRY ? Example for stealth ebay sellers use same country tells ebay you are in that coountry location as stated were you live when you registered the ebay stealth account (EXAMPLE ONLY) so same country? YES")
+print("Start now")
+print("Enter User Agent & WAIT    - Step 1")
+print("Enter Proxy Ip & WAIT      - Step 2")
+
+#-------------user agent changer--------------
+url = 'https://www.whatismybrowser.com/detect/what-is-my-user-agent'
+user_agent = " "
+user_agent = input("PLEASE ENTER User Agent:  ")
+#  user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:72.0) Gecko/20100101 Firefox/72.0'
+#  user_agent = 'AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0'
 driver = webdriver.Chrome(ChromeDriverManager().install())
-driver.set_window_position(0, 0)
-driver.set_window_size(1920, 1024)
+opts = Options()
+opts.add_argument("user-agent=" + user_agent)
+driver = webdriver.Chrome(options=opts)
+driver.get(url)
+String_userAgent = driver.execute_script("return navigator.userAgent")
+print(String_userAgent)
 
-# -------------HouseKeeping-----------
+print("STEP 2 OUT OF 2")
+print("Enter  (PROXY IP)")
 
-driver.get("https://www.ebay.com")
+#----------------Proxy Changer---------------
+# LIST PROXY   http://spys.one/en/https-ssl-proxy/
+PROXY = " "
+PROXY = input("PLEASE ENTER Proxy IP:  ")
+webdriver.DesiredCapabilities.CHROME['proxy']={
+    "httpProxy":PROXY,
+    "ftpProxy":PROXY,
+    "sslProxy":PROXY,
+    "noProxy":None,
+    "proxyType":"MANUAL",
+    "autodetect":False
+}
 
-#proxy and request from bs4 & requests also
-proxy = Random_Proxy()
-r = proxy.Proxy_Request(url='https://www.ebay.com', request_type='get')
-print(r.text)
+time.sleep(20)
+driver = webdriver.Chrome(ChromeDriverManager().install())
+driver.get('https://www.whatsmyip.org/')
+print(PROXY)
 
-# Create a class
-proxy = Random_Proxy()
+# see commment 6     https://stackoverflow.com/questions/17082425/running-selenium-webdriver-with-a-proxy-in-python
 
-url = 'https://www.ebay.com'
-request_type = "get"
+print("Please check another browser and you will see that your identity is changed")
+print("Check User Agent")
+print("Check your IP Address in another Browser against this browsers PROXY IP, simply search for it!")
+print("ALL DONE")
+print("Thank-you")
+print("DS Wizard powered by BARGAIN BASEMENT AUSTRALIA")
+print("https://www.bargainbasementaustralia.com/")
 
-
-#PROXY DETAILS
-r = proxy.Proxy_Request(url=url, request_type=request_type)
-print(r)
-
-print("Tell others about us & enjoy")
-print("****THANK YOU****")
-
-#98 & 113 approx u will see other url need to change as per line 178 approx
-# I NEED TO MAKE AVAIL 4 URL .AU .US. .UK EVERY COUNTRY not just .com
 
