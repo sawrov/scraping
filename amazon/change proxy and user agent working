@@ -6,7 +6,8 @@ import time
 
 #-------------user agent changer--------------
 url = 'https://www.whatismybrowser.com/detect/what-is-my-user-agent'
-user_agent = 'THIS IS MY USER AGENT STRING'
+user_agent = '  '
+user_agent = input("PLEASE ENTER User Agent:  ")
 #  user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:72.0) Gecko/20100101 Firefox/72.0'
 #  user_agent = 'AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0'
 
@@ -24,7 +25,8 @@ print(String_userAgent)
 
 #----------------Proxy Changer---------------
 # LIST PROXY   http://spys.one/en/https-ssl-proxy/
-PROXY = "123.231.171.11:8080"
+PROXY = "  "
+PROXY = input("PLEASE ENTER Proxy IP:  ")
 webdriver.DesiredCapabilities.CHROME['proxy']={
     "httpProxy":PROXY,
     "ftpProxy":PROXY,
@@ -35,7 +37,7 @@ webdriver.DesiredCapabilities.CHROME['proxy']={
 }
 
 driver = webdriver.Chrome(ChromeDriverManager().install())
-time.sleep(15)
+time.sleep(20)
 driver.get('https://whatismyipaddress.com/')
 
 print(PROXY)
