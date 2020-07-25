@@ -1,75 +1,112 @@
+from pip._internal.network.session import user_agent
+from selenium import webdriver
+
+
+
+
+
+
+class AliExpressScraper:
+
+    def __init__(self, start):
+        print("-----------------INITIALIZING SCRAPER--------------\n")
+
+PROXY = " "
+PROXY = input("PLEASE ENTER Proxy IP & Wait:      ")
+webdriver.DesiredCapabilities.CHROME['proxy'] = {
+    "httpProxy": PROXY,
+    "ftpProxy": PROXY,
+    "sslProxy": PROXY,
+    "noProxy": None,
+    "proxyType": "MANUAL",
+    "autodetect": False
+}
+print(PROXY)
+
+
+
+def main():
+
+
+    start = str(print("-----------------INITIALIZING SCRAPER ?--------------\n") )
+
+
+
+def verify(key):
+    print(key)
+    score = 0
+    check_digit = key[2]
+    check_digit_count = 0
+    chunks = key.split('-')
+    for chunk in chunks:
+        if len(chunk) != 4:
+            return False
+        for char in chunk:
+            if char == check_digit:
+                check_digit_count += 1
+            score += ord(char)
+    if score == 1672 and check_digit_count == 5:
+        return True
+    return False
+
+
+def validate_user():
+    while True:
+        key = input("PLEASE ENTER A VALID KEY TO RUN THE PROGRAM:  ")
+        try:
+            if verify(key.lower()):
+                print("KEY VALID:")
+                return True
+            else:
+                print("INVALID KEY, PLEASE ENTER A VALID KEY TO RUN THE PROGRAM\n")
+        except IndexError:
+            print("PLEASE ENTER A VALID KEY\n")
+
+
+# strings in here on main function
+
+if __name__ == "__main__":
+    if validate_user():
+        main()
+        if user_agent():
+            main()
+
+
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
 import time
-
-
-print("DS Wizard powered by BARGAIN BASEMENT AUSTRALIA")
-print("***ADD ON***")
-print("Hide Identity for (USER AGENT) & (PROXY IP) ")
-
-print("STEP 1 OUT OF 2")
-print("Enter or leave blank (USER AGENT)")
-
-print("Step 1 - easy simply just change user agent name")
-print("Step 2 - not easy, must search proxy ip list")
-print("A proxy server is basically a computer on the internet with its own IP address that your computer knows. When you send a web request, your request goes to the proxy server first. ... A proxy server can change your IP address, so the web server doesn't know exactly where you are in the world.")
-print("Get lists online just search it or from example: http://spys.one/en/https-ssl-proxy/")
-print("Now enter the ip address to change it")
-print("WAIT")
-print("Possible error not to worry, ok. If the page loads in error its from 2 factors they are;")
-print("ERROR: (1) if browser says 502 error or like error or No internet-Hit refresh in browser as the new proxy ip just needs refresh page, thats it")
-print("ERROR: (2) the ip selected is not working, simply use another")
-print("NOTE: Once step 1 is done - user agent details in browser header settings will set as you desire")
-print("NOTE: Enter Proxy IP - Step 2 WAIT for next browser to open to see if PROXY IP is changed or need to get another PROXY IP & RUN PROGRAM AGAIN, to change it")
-print("NOTE: Set PROXY IP in SAME COUNTRY ? Example for stealth ebay sellers use same country tells ebay you are in that coountry location as stated were you live when you registered the ebay stealth account (EXAMPLE ONLY) so same country? YES")
-print("Start now")
-print("Enter User Agent & WAIT    - Step 1")
-print("Enter Proxy Ip & WAIT      - Step 2")
-
-#-------------user agent changer--------------
-url = 'https://www.whatismybrowser.com/detect/what-is-my-user-agent'
-user_agent = " "
-user_agent = input("PLEASE ENTER User Agent:  ")
-#  user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:72.0) Gecko/20100101 Firefox/72.0'
-#  user_agent = 'AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0'
 driver = webdriver.Chrome(ChromeDriverManager().install())
+
+user_agent = " "
+user_agent = input("PLEASE ENTER User Agent & Wait:      ")
+
 opts = Options()
 opts.add_argument("user-agent=" + user_agent)
 driver = webdriver.Chrome(options=opts)
-driver.get(url)
 String_userAgent = driver.execute_script("return navigator.userAgent")
 print(String_userAgent)
-
-print("STEP 2 OUT OF 2")
-print("Enter  (PROXY IP)")
-
-#----------------Proxy Changer---------------
-# LIST PROXY   http://spys.one/en/https-ssl-proxy/
-PROXY = " "
-PROXY = input("PLEASE ENTER Proxy IP:  ")
-webdriver.DesiredCapabilities.CHROME['proxy']={
-    "httpProxy":PROXY,
-    "ftpProxy":PROXY,
-    "sslProxy":PROXY,
-    "noProxy":None,
-    "proxyType":"MANUAL",
-    "autodetect":False
-}
-
-time.sleep(20)
-driver = webdriver.Chrome(ChromeDriverManager().install())
+time.sleep(10)
 driver.get('https://www.whatsmyip.org/')
+time.sleep(10)
 print(PROXY)
 
-# see commment 6     https://stackoverflow.com/questions/17082425/running-selenium-webdriver-with-a-proxy-in-python
 
-print("Please check another browser and you will see that your identity is changed")
-print("Check User Agent")
-print("Check your IP Address in another Browser against this browsers PROXY IP, simply search for it!")
-print("ALL DONE")
-print("Thank-you")
-print("DS Wizard powered by BARGAIN BASEMENT AUSTRALIA")
-print("https://www.bargainbasementaustralia.com/")
+# LIST PROXY   http://spys.one/en/https-ssl-proxy/
 
+#  https://www.whatsmyip.org/
+#  working proxy
+#  118.99.73.161:8080
+#  190.120.249.30:999
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
 
