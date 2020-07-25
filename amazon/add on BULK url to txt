@@ -2,11 +2,11 @@ class AliExpressScraper:
 
 
     def __init__(self, start):
-        print("-----------------INITIALIZING SCRAPER--------------\n")
+        print("-----------------INITIALIZING--------------\n")
 
 def main():
 
-    start = str(print("-----------------INITIALIZING SCRAPER--------------\n") )
+    start = str(print("-----------------INITIALIZING--------------\n") )
 
 def verify(key):
     print(key)
