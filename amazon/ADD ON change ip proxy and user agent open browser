@@ -9,7 +9,7 @@ from selenium import webdriver
 class AliExpressScraper:
 
     def __init__(self, start):
-        print("-----------------INITIALIZING SCRAPER--------------\n")
+        print("-----------------INITIALIZING--------------\n")
 
 PROXY = " "
 PROXY = input("PLEASE ENTER Proxy IP & Wait:      ")
@@ -28,7 +28,7 @@ print(PROXY)
 def main():
 
 
-    start = str(print("-----------------INITIALIZING SCRAPER ?--------------\n") )
+    start = str(print("-----------------INITIALIZING--------------\n") )
 
 
 
