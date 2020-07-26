@@ -12,6 +12,7 @@ import urllib.request as request
 from multiprocessing.pool import ThreadPool
 import requests.exceptions as RException
 from datetime import datetime
+from builtins import any as Any
 import schedule
 import csv
 
@@ -24,13 +25,14 @@ class AliExpressScraper:
     # ----------Flags--------------
     # ----------Flags--------------
 
-    def __init__(self, folder_name, csv_writer):
+    def __init__(self, folder_name, csv_writer, currency):
         print("-----------------INITIALIZING SCRAPER--------------\n")
 
         # -------initializing variables-----------------
         self.index = 0;
         self.description_element = None
         self.download_location = ""
+        self.currency = currency
 
         # ----------Declaring Flags--------------
         self.color_flag = False
@@ -90,13 +92,46 @@ class AliExpressScraper:
                     self.start_file_download()
                     self.successful_url.write(url + "\n")
                 else:
-                    print("THAT")
+                    print("CAN'T LOAD URL")
             else:
-                print("THIS")
+                print("CAN'T SET URL")
         except:
             print("THERE WAS AN ISSUE SCRAPING THE LINK:\n")
             self.unsuccessful_url.write(url + "\n")
             print("THE URL HAS BEEN LOGGED")
+            raise
+
+    def setcurrency(self):
+
+        q1_a = wait(self.driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, "//div[@data-role='region-pannel']")))
+        q2_b = wait(self.driver, 5).until(EC.element_to_be_clickable((By.XPATH, "//div[@data-role='region-pannel']")))
+        time.sleep(3)
+        region = self.driver.find_element_by_xpath("//div[@data-role='region-pannel']")
+        # print (region)
+        # print(region.text)
+        region.click()
+        q1_a = wait(self.driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, "//*[@id='nav-global']/div[4]/div/div/div/div[3]/div/span")))
+        currency_list = self.driver.find_element_by_xpath("//*[@id='nav-global']/div[4]/div/div/div/div[3]/div/span")
+        currency_list.click()
+        # selected_curr=self.driver.find_element_by_xpath("//*[@id='nav-global']/div[4]/div/div/div/div[3]/div/div/input").send_keys("USD")
+        lists=self.driver.find_elements_by_xpath(
+            "//*[@id='nav-global']/div[4]/div/div/div/div[3]/div/ul//li")
+        print(len(lists))
+        for list in lists:
+            if self.currency in list.text:
+                list.click()
+                self.driver.find_element_by_xpath("//*[@id='nav-global']/div[4]/div/div/div/div[4]/button").click()
+                return True
+        return False
+        # key = self.driver.find_element_by_xpath(
+        #     "//*[@id='nav-global']/div[4]/div/div/div/div[3]/div/ul//li/a[text()='USD']")
+        # print(key.text)
+        # key.click()
+        # print(len(currency_list))
+        # print(currency)
+        # currency.click()
 
     def close_session(self):
         self.terminate()
@@ -140,6 +175,9 @@ class AliExpressScraper:
             try:
                 wait(self.driver, 5).until(EC.presence_of_element_located((By.CLASS_NAME, "next-dialog-close")))
                 self.driver.find_element_by_class_name("next-dialog-close").click()
+                if self.setcurrency():
+                    wait(self.driver, 5).until(EC.presence_of_element_located((By.CLASS_NAME, "next-dialog-close")))
+                    self.driver.find_element_by_class_name("next-dialog-close").click()
             except DriverExceptions.NoSuchElementException:
                 print("No POP-UP Detected")
                 pass
@@ -319,7 +357,6 @@ class AliExpressScraper:
                 for j, price in enumerate(info_list):
                     f.write("\t\t FOR COLOR: " + self.information["color_details"][j][0] + "\n")
                     csv_color = self.information["color_details"][j][0]
-                    print(csv_color)
                     for k, l in enumerate(price):
                         try:
                             csv_size = self.information["size_details"][k]
@@ -400,7 +437,7 @@ class AliExpressScraper:
 # test = "https://www.aliexpress.com/item/4000911368854.html?spm=a2g0o.productlist.0.0.6321e7b8lZ1xNh&algo_pvid=6e318c9b-c868-44d6-b321-78c194ae8f2f&algo_expid=6e318c9b-c868-44d6-b321-78c194ae8f2f-0&btsid=0ab6d69515944368163817904e975f&ws_ab_test=searchweb0_0,searchweb201602_,searchweb201603_"
 # scrape.start_scraping(test)
 
-def main():
+def main(currency):
     # print("COOL")
     try:
         f = open("debug.txt", "a+")
@@ -408,14 +445,14 @@ def main():
         print("file not present")
     folder_name = str(datetime.now().strftime("%b %d %Y %H-%M"))
     # csv file open
-    Csv = open("Output/"+str(folder_name)+'output.csv', 'w')
+    Csv = open("Output/" + str(folder_name) + 'output.csv', 'w')
     csv_writer = csv.writer(Csv)
     with open("aliexpressurl.txt") as links:
         urls = links.readlines()
         for url in urls:
             try:
                 print("TESTING URL: " + url)
-                scrape = AliExpressScraper(folder_name, csv_writer)
+                scrape = AliExpressScraper(folder_name, csv_writer, currency)
                 scrape.start_scraping(url)
                 scrape.close_session()
 
@@ -459,8 +496,17 @@ def validate_user():
 
 # cron job in here on main function
 if __name__ == "__main__":
+    currency_file = open("currency_list.txt", "r")
+    currency_list=currency_file.readlines()
+    print ("\n".join(currency_list))
+    curr = input("CHOOSE THE CURRENCY FROM THE LIST ABOVE \n FOR EG: ENTER AUD FOR AUSTRALIAN DOLLAR: ")
+    if Any(curr.upper() in x for x in currency_list):
+        print("VALID KEYWORD")
+    else:
+        print(" INVALID CURRENCY DEFAULT CURRENCY (USD) IS USED")
+        curr="USD"
     # if validate_user():
-    main()
+    main(curr)
     # schedule.every(10).minutes.do(main)
     # while True:
     #     schedule.run_pending()

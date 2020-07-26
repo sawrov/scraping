@@ -1,0 +1,145 @@
+USD :  US Dollar  
+AFN :  Afghan Afghani  
+EUR :  Euro  
+ALL :  Albanian Lek  
+AOA :  Angolan Kwanza  
+XCD :  East Carribean Dollar  
+AMD :  Armenian Dram  
+AWG :  Aruban Florin  
+SHP :  St. Helena Pound  
+AUD :  Australian Dollar  
+AZN :  Azerbaijan New Manat  
+BSD :  Bahamian Dollar  
+BHD :  Bahraini Dinar  
+BDT :  Bangladeshi Taka  
+BYR :  Belarusian Ruble  
+BZD :  Belize Dollar  
+XOF :  CFA Franc BCEAO  
+BMD :  Bermudian Dollar  
+BTN :  Bhutan Ngultrum  
+BAM :  Bosnian Mark  
+BWP :  Botswana Pula  
+NOK :  Norwegian Kroner  
+BRL :  Brazilian Real  
+BND :  Brunei Dollar  
+BGN :  Bulgarian Lev  
+BIF :  Burundi Franc  
+KHR :  Cambodian Riel  
+XAF :  CFA Franc BEAC  
+CAD :  Canadian Dollar  
+CVE :  Cape Verde Escudo  
+KYD :  Cayman Islands Dollar  
+CLP :  Chilean Peso  
+KMF :  Comoros Franc  
+CDF :  Congolese Franc  
+NZD :  New Zealand Dollar  
+CRC :  Costa Rican Colon  
+CZK :  Czech Koruna  
+DKK :  Danish Krone  
+DJF :  Djibouti Franc  
+DOP :  Dominican Peso  
+EGP :  Egyptian Pound  
+SVC :  Salvadoran colón  
+ERN :  Eritrean Nakfa  
+XPF :  CFP Franc  
+NIO :  Nicaraguan Cordoba Oro  
+NGN :  Nigerian Naira  
+OMR :  Omani Rial  
+PKR :  Pakistan Rupee  
+PGK :  Papua New Guinea Kina  
+PYG :  Paraguay Guarani  
+PHP :  Philippine Peso  
+PLN :  Polish Zloty  
+QAR :  Qatari Rial  
+RON :  Romanian New Leu  
+RUB :  Russian Rouble  
+RWF :  Rwandan Franc  
+WST :  Samoan Tala  
+STD :  Sao Tome/Principe Dobra  
+SAR :  Saudi Riyal  
+RSD :  Serbian Dinar  
+SCR :  Seychelles Rupee  
+SLL :  Sierra Leone Leone  
+SGD :  Singapore Dollar  
+SBD :  Solomon Islands Dollar  
+SOS :  Somali Shilling  
+ZAR :  South African Rand  
+KRW :  Korean Won  
+LKR :  Sri Lanka Rupee  
+SRD :  Suriname Dollar  
+SZL :  Swaziland Lilangeni  
+SEK :  Swedish Krona  
+CHF :  Swiss Franc  
+TWD :  Taiwan Dollar  
+TJS :  Tajikistan Somoni  
+TZS :  Tanzanian Shilling  
+THB :  Thai Baht  
+TOP :  Tongan Pa'anga  
+TTD :  Trinidad/Tobago Dollar  
+TND :  Tunisian Dinar  
+TRY :  Turkish Lira  
+TMT :  Turkmenistan New Manat  
+UGX :  Uganda Shilling  
+UAH :  Ukraine Hryvnia  
+AED :  Utd. Arab Emir. Dirham  
+GBP :  United Kingdom Pound  
+UYU :  Uruguayan Peso  
+UZS :  Uzbekistan Som  
+VUV :  Vanuatu Vatu  
+VND :  Vietnamese Dong  
+YER :  Yemen Rial  
+ZMW :  Zambian Kwacha  
+ZWL :  Zimbabwe Dollar  
+ETB :  Ethiopian Birr  
+FKP :  Falkland Islands Pound  
+FJD :  Fiji Dollar  
+GMD :  Gambian Dalasi  
+GEL :  Georgian Lari  
+GHS :  Ghanaian New Cedi  
+GIP :  Gibraltar Pound  
+GTQ :  Guatemalan Quetzal  
+GNF :  Guinea Franc  
+GYD :  Guyanan Dollar  
+HTG :  Haitian Gourde  
+HNL :  Honduran Lempira  
+HKD :  Hong Kong Dollar  
+HUF :  Hungarian Forint  
+ISK :  Iceland Krona  
+INR :  Indian Rupee  
+IDR :  Indonesian Rupiah  
+IQD :  Iraqi Dinar  
+ILS :  Israeli New Shekel  
+JMD :  Jamaican Dollar  
+JPY :  Japanese Yen  
+KZT :  Kazakhstan Tenge  
+KES :  Kenyan Shilling  
+KWD :  Kuwaiti Dinar  
+KGS :  Kyrgyzstanian Som  
+LAK :  Lao Kip  
+LBP :  Lebanese Pound  
+LSL :  Lesotho Loti  
+LRD :  Liberian Dollar  
+LYD :  Libyan Dinar  
+MOP :  Macanese pataca  
+MKD :  Macedonian Denar  
+MWK :  Malawi Kwacha  
+MYR :  Malaysian Ringgit  
+MVR :  Maldive Rufiyaa  
+MUR :  Mauritius Rupee  
+MXN :  Mexican peso  
+MDL :  Moldovan Leu  
+MNT :  Mongolian Tugrik  
+MAD :  Moroccan Dirham  
+MZN :  Mozambique New Metical  
+MMK :  Myanmar Kyat  
+NAD :  Namibia Dollar  
+NPR :  Nepalese Rupee  
+ARS :  Argentine Peso  
+PEN :  Peruvian Nuevo Sol  
+DZD :  Algerian Dinar  
+JOD :  Jordanian Dinar  
+BOB :  Bolivian Mvdol  
+COP :  Unidad de Valor Real  
+BBD :  Barbados Dollar  
+PAB :  Panamanian balboa  
+HRK :  Croatian kuna  
