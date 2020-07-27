@@ -3,12 +3,14 @@ from selenium.common import exceptions as DriverExceptions
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait as wait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
 import re
 import os
 import time
 import numpy as np
 import urllib.request as request
+import urllib3.exceptions as UException
 from multiprocessing.pool import ThreadPool
 import requests.exceptions as RException
 from datetime import datetime
@@ -70,6 +72,8 @@ class AliExpressScraper:
         # ---------OPENING FILES -----------
 
         try:
+            # chrome_options = Options()
+            # chrome_options.add_argument("--headless")
             self.driver = webdriver.Chrome(ChromeDriverManager().install())
             self.driver.set_window_position(0, 0)
             self.driver.set_window_size(1920, 1024)
@@ -82,7 +86,7 @@ class AliExpressScraper:
 
         except DriverExceptions.SessionNotCreatedException:
             print("\nBROWSER CLOSED BEFORE SESSION WAS CREATED")
-            exit()
+            quit()
 
     def start_scraping(self, url):
         try:
@@ -118,20 +122,14 @@ class AliExpressScraper:
         # selected_curr=self.driver.find_element_by_xpath("//*[@id='nav-global']/div[4]/div/div/div/div[3]/div/div/input").send_keys("USD")
         lists=self.driver.find_elements_by_xpath(
             "//*[@id='nav-global']/div[4]/div/div/div/div[3]/div/ul//li")
-        print(len(lists))
         for list in lists:
             if self.currency in list.text:
                 list.click()
+                print("CURRENCY SET TO: " + str(list.text))
                 self.driver.find_element_by_xpath("//*[@id='nav-global']/div[4]/div/div/div/div[4]/button").click()
                 return True
         return False
-        # key = self.driver.find_element_by_xpath(
-        #     "//*[@id='nav-global']/div[4]/div/div/div/div[3]/div/ul//li/a[text()='USD']")
-        # print(key.text)
-        # key.click()
-        # print(len(currency_list))
-        # print(currency)
-        # currency.click()
+
 
     def close_session(self):
         self.terminate()
@@ -457,6 +455,10 @@ def main(currency):
                 scrape.close_session()
 
             except KeyboardInterrupt:
+                try:
+                    scrape.driver.close()
+                except UException.MaxRetryError:
+                    pass
                 print("YOU QUIT THE PROGRAM")
                 quit()
             # except DriverExceptions.

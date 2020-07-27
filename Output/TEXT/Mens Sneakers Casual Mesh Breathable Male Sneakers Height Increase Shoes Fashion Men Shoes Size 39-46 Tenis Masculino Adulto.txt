@@ -1,6 +1,6 @@
 NAME:	Mens Sneakers Casual Mesh Breathable Male Sneakers Height Increase Shoes Fashion Men Shoes Size 39-46 Tenis Masculino Adulto
 STORE:	KJEDGB 11 Store
-BASE-PRICE:	ARS 862,10 - 1.216,28
+BASE-PRICE:	NPR 1,436.04 - 2,026.01
 
 SHIPPING INFORMATION: 
 Free Shipping 
@@ -16,41 +16,41 @@ SIZE INFORMATION:
 
 VARIATION IN PRICES:
 		 FOR COLOR: Black
-			39:ARS 862,10 QTY:500 Pair available 
-			40:ARS 1.216,28 QTY:500 Pair available 
-			41:ARS 1.216,28 QTY:500 Pair available 
-			42:ARS 1.216,28 QTY:496 Pair available 
-			43:ARS 1.216,28 QTY:500 Pair available 
-			44:ARS 1.216,28 QTY:500 Pair available 
-			45:ARS 1.216,28 QTY:499 Pair available 
-			46:ARS 1.216,28 QTY:497 Pair available 
+			39:NPR 1,436.04 QTY:500 Pair available 
+			40:NPR 2,026.01 QTY:500 Pair available 
+			41:NPR 2,026.01 QTY:500 Pair available 
+			42:NPR 2,026.01 QTY:496 Pair available 
+			43:NPR 2,026.01 QTY:500 Pair available 
+			44:NPR 2,026.01 QTY:500 Pair available 
+			45:NPR 2,026.01 QTY:499 Pair available 
+			46:NPR 2,026.01 QTY:497 Pair available 
 		 FOR COLOR: Brown
-			39:ARS 1.216,28 QTY:500 Pair available 
-			40:ARS 1.216,28 QTY:500 Pair available 
-			41:ARS 1.216,28 QTY:500 Pair available 
-			42:ARS 1.216,28 QTY:499 Pair available 
-			43:ARS 1.216,28 QTY:499 Pair available 
-			44:ARS 1.216,28 QTY:499 Pair available 
-			45:ARS 1.216,28 QTY:500 Pair available 
-			46:ARS 1.216,28 QTY:500 Pair available 
+			39:NPR 2,026.01 QTY:500 Pair available 
+			40:NPR 2,026.01 QTY:500 Pair available 
+			41:NPR 2,026.01 QTY:500 Pair available 
+			42:NPR 2,026.01 QTY:499 Pair available 
+			43:NPR 2,026.01 QTY:499 Pair available 
+			44:NPR 2,026.01 QTY:499 Pair available 
+			45:NPR 2,026.01 QTY:500 Pair available 
+			46:NPR 2,026.01 QTY:500 Pair available 
 		 FOR COLOR: Apple Green
-			39:ARS 1.216,28 QTY:500 Pair available 
-			40:ARS 1.216,28 QTY:500 Pair available 
-			41:ARS 1.216,28 QTY:500 Pair available 
-			42:ARS 1.216,28 QTY:499 Pair available 
-			43:ARS 1.216,28 QTY:500 Pair available 
-			44:ARS 1.216,28 QTY:500 Pair available 
-			45:ARS 1.216,28 QTY:500 Pair available 
-			46:ARS 1.216,28 QTY:500 Pair available 
+			39:NPR 2,026.01 QTY:500 Pair available 
+			40:NPR 2,026.01 QTY:500 Pair available 
+			41:NPR 2,026.01 QTY:500 Pair available 
+			42:NPR 2,026.01 QTY:499 Pair available 
+			43:NPR 2,026.01 QTY:500 Pair available 
+			44:NPR 2,026.01 QTY:500 Pair available 
+			45:NPR 2,026.01 QTY:500 Pair available 
+			46:NPR 2,026.01 QTY:500 Pair available 
 		 FOR COLOR: White
-			39:ARS 1.216,28 QTY:499 Pair available 
-			40:ARS 1.216,28 QTY:500 Pair available 
-			41:ARS 1.216,28 QTY:500 Pair available 
-			42:ARS 1.216,28 QTY:500 Pair available 
-			43:ARS 1.216,28 QTY:500 Pair available 
-			44:ARS 1.216,28 QTY:500 Pair available 
-			45:ARS 1.216,28 QTY:499 Pair available 
-			46:ARS 1.216,28 QTY:500 Pair available 
+			39:NPR 2,026.01 QTY:499 Pair available 
+			40:NPR 2,026.01 QTY:500 Pair available 
+			41:NPR 2,026.01 QTY:500 Pair available 
+			42:NPR 2,026.01 QTY:500 Pair available 
+			43:NPR 2,026.01 QTY:500 Pair available 
+			44:NPR 2,026.01 QTY:500 Pair available 
+			45:NPR 2,026.01 QTY:499 Pair available 
+			46:NPR 2,026.01 QTY:500 Pair available 
 
 
 ---------DESCRIPTION-----------
