@@ -33,7 +33,7 @@ dropdown.config(height=0)
 dropdown.pack()
 
 CheckVar1 = tk.IntVar()
-C1 = tk.Checkbutton(root, text = "CRONJOB", variable = CheckVar1, \
+C1 = tk.Checkbutton(root, text = "SCHEDULE REFRESH", variable = CheckVar1, \
                  onvalue = 1, offvalue = 0)
 C1.pack()
 

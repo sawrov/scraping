@@ -3,6 +3,7 @@ from selenium.common import exceptions as DriverExceptions
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait as wait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
 import re
@@ -288,6 +289,8 @@ class AliExpressScraper:
         while True:
             if self.shipping_flag:
                 try:
+                    # self.reset_buttons(self.information["size_elements"])
+                    # self.reset_buttons(self.information["color_elements"])
                     self.information["shipping_elements"][self.index].click()
                 except IndexError:
                     break
@@ -296,11 +299,15 @@ class AliExpressScraper:
                 if "selected" in self.information["track_color_selection"][i].get_attribute("class"):
                     pass
                 else:
-                    color.click()
+                    try:
+                        color.click()
+                    except:
+                        continue
                 for j, size in enumerate(self.information["size_elements"]):
                     try:
                         if "disabled" in size.get_attribute("class"): continue
                         size.click()
+                        webdriver.ActionChains(self.driver).send_keys(Keys.ESCAPE).perform()
                         time.sleep(0.2)
                         temp = self.driver.find_element_by_class_name(
                             'product-price-value').text + "||" + re.sub('\spieces available\s', '',
@@ -308,11 +315,13 @@ class AliExpressScraper:
                                                                             "product-quantity-tip").text)
                         self.size_color_matrix[i][j] = temp
                         size.click()
+                        webdriver.ActionChains(self.driver).send_keys(Keys.ESCAPE).perform()
 
                     except DriverExceptions.NoSuchElementException:
                         print("Size for " + color.get_attribute("title") + "\tUNAVAILABLE")
                         continue
-                self.reset_buttons(self.information["size_elements"])
+                color.click()
+
             self.information["variation_in_size_and_color"][self.index] = (self.size_color_matrix.tolist())
             self.index += 1
             if not self.shipping_flag:
