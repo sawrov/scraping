@@ -331,7 +331,7 @@ class AliExpressScraper:
         self.get_variations()
         self.get_description()
 
-        f = open("Output/TEXT/" + str(self.information["title"]) + ".txt", "w+")
+        f = open("Output/TEXT/" + re.sub(r'[\\/*?:"<>|]',"",str(self.information["title"])) + ".txt", "w+")
         f.write("NAME:\t" + self.information["title"] + "\n")
         f.write("STORE:\t" + self.information["store"] + "\n")
         f.write("BASE-PRICE:\t" + self.information["price"] + "\n")
