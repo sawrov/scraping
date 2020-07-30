@@ -1,7 +1,2 @@
-import csv
-with open('innovators.csv', 'w', newline='') as file:
-    writer = csv.writer(file)
-    writer.writerow(["SN", "Name", "Contribution"])
-    writer.writerow([1, "Linus Torvalds", "Linux Kernel"])
-    writer.writerow([2, "Tim Berners-Lee", "World Wide Web"])
-    writer.writerow([3, "Guido van Rossum", "Python Programming"])
+f=open('Output/TEXT/Chekich Sneakers Men Women Unisex Sneakers Casual Comfortable Flexible Fashion Leather Wedding Orthopedic Walking Shoe Sport Shoes Comfort Lightweight Sneakers Runnin
+g Shoes Breathable Zapatos Hombre CH255.txt')
