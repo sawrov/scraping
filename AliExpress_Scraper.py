@@ -327,14 +327,28 @@ class AliExpressScraper:
             if not self.shipping_flag:
                 break
 
+    def get_reviews(self):
+        product_detail=self.driver.find_element_by_id("product-detail")
+        self.driver.execute_script("arguments[0].scrollIntoView();", product_detail)
+        rev_tab = self.driver.find_element_by_xpath('//*[@id="product-detail"]/div[1]/div/div[1]/ul/li[2]/div/span')
+        rev_tab.click()
+        reviews=self.driver.find_element_by_class_name("feedback-list-wrap")
+        reviews.text
+        # print(reviews)
+        # print(len(reviews))
+        # for rev in reviews:
+        #     print("HERE")
+        #     print(rev.text)
+
     def show_info(self):
         self.get_variations()
         self.get_description()
+        # self.get_reviews()
         try:
-            f = open("Output/TEXT/" + str(re.sub(r'[\\/*?:"<>|]',"",str(self.information["title"])))[:50] + ".txt", "w+")
+            f = open("Output/TEXT/" + str(re.sub(r'[\\/*?:"<>|]',"",str(self.information["title"])))[:50] + ".txt", "w+", encoding='utf-8')
         except:
             raise
-        f.write("NAME:\t" + self.information["title"] + "\n")
+        f.write(str(("NAME:\t" + self.information["title"] + "\n").encode("utf-8")))
         f.write("STORE:\t" + self.information["store"] + "\n")
         f.write("BASE-PRICE:\t" + self.information["price"] + "\n")
         f.write("\nSHIPPING INFORMATION: \n")
@@ -436,7 +450,10 @@ class AliExpressScraper:
             print("SCRAPING SUCCESSFULLY COMPLETED: " + self.current_url)
 
     def terminate(self):
-        self.driver.quit()
+        try:
+            self.driver.quit()
+        except:
+            pass
 
 
 # test = "https://www.aliexpress.com/item/4000607551628.html?spm=2114.12010610.8148356.43.564e4db0e12tqe"
@@ -454,7 +471,7 @@ def main(currency):
         print("file not present")
     folder_name = str(datetime.now().strftime("%b %d %Y %H-%M"))
     # csv file open
-    Csv = open("Output/" + str(folder_name) + 'output.csv', 'w')
+    Csv = open("Output/"+ 'Mother.csv', 'a+', encoding='utf-8')
     csv_writer = csv.writer(Csv)
     with open("aliexpressurl.txt") as links:
         urls = links.readlines()
