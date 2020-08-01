@@ -104,7 +104,11 @@ class AliExpressScraper:
             print("THERE WAS AN ISSUE SCRAPING THE LINK:\n")
             self.unsuccessful_url.write(url + "\n")
             print("THE URL HAS BEEN LOGGED")
-            raise
+            print("THE URL WITH THE PROBLEM IS: \n\n")
+            print("---------------------------------------")
+            print(url)
+            print("---------------------------------------")
+            # raise
 
     def setcurrency(self):
 
@@ -121,7 +125,7 @@ class AliExpressScraper:
         currency_list = self.driver.find_element_by_xpath("//*[@id='nav-global']/div[4]/div/div/div/div[3]/div/span")
         currency_list.click()
         # selected_curr=self.driver.find_element_by_xpath("//*[@id='nav-global']/div[4]/div/div/div/div[3]/div/div/input").send_keys("USD")
-        lists=self.driver.find_elements_by_xpath(
+        lists = self.driver.find_elements_by_xpath(
             "//*[@id='nav-global']/div[4]/div/div/div/div[3]/div/ul//li")
         for list in lists:
             if self.currency in list.text:
@@ -130,7 +134,6 @@ class AliExpressScraper:
                 self.driver.find_element_by_xpath("//*[@id='nav-global']/div[4]/div/div/div/div[4]/button").click()
                 return True
         return False
-
 
     def close_session(self):
         self.terminate()
@@ -328,12 +331,23 @@ class AliExpressScraper:
                 break
 
     def get_reviews(self):
-        product_detail=self.driver.find_element_by_id("product-detail")
+        product_detail = self.driver.find_element_by_id("product-detail")
         self.driver.execute_script("arguments[0].scrollIntoView();", product_detail)
         rev_tab = self.driver.find_element_by_xpath('//*[@id="product-detail"]/div[1]/div/div[1]/ul/li[2]/div/span')
         rev_tab.click()
-        reviews=self.driver.find_element_by_class_name("feedback-list-wrap")
-        reviews.text
+        link = self.driver.find_element_by_xpath('//*[@id="product-evaluation"]').get_attribute('src')
+        self.driver.get(link)
+        wait(self.driver, 5).until(EC.presence_of_element_located((By.CLASS_NAME, 'feedback-list-wrap')))
+        feedbacks = self.driver.find_elements_by_class_name('feedback-item')
+        if (len(feedbacks) > 0):
+            Csv = open("Output/" + 'Reviews.csv', 'a+', encoding='utf-8')
+            csv_writer = csv.writer(Csv)
+            for feedback in feedbacks[:10]:
+                head, _, _ = feedback.text.partition('Helpful?')
+                csv_writer.writerow([str(self.current_url), head])
+
+        self.driver.quit()
+        quit()
         # print(reviews)
         # print(len(reviews))
         # for rev in reviews:
@@ -341,13 +355,19 @@ class AliExpressScraper:
         #     print(rev.text)
 
     def show_info(self):
+
         self.get_variations()
         self.get_description()
-        # self.get_reviews()
+        self.get_reviews()
+
+
         try:
-            f = open("Output/TEXT/" + str(re.sub(r'[\\/*?:"<>|]',"",str(self.information["title"])))[:50] + ".txt", "w+", encoding='utf-8')
+            f = open("Output/TEXT/" + str(re.sub(r'[\\/*?:"<>|]', "", str(self.information["title"])))[:50] + ".txt",
+                     "w+", encoding='utf-8')
         except:
-            raise
+            f = open("Output/TEXT/" + self.information["title"] + ".txt",
+                     "w+", encoding='utf-8')
+
         f.write(str(("NAME:\t" + self.information["title"] + "\n").encode("utf-8")))
         f.write("STORE:\t" + self.information["store"] + "\n")
         f.write("BASE-PRICE:\t" + self.information["price"] + "\n")
@@ -471,7 +491,7 @@ def main(currency):
         print("file not present")
     folder_name = str(datetime.now().strftime("%b %d %Y %H-%M"))
     # csv file open
-    Csv = open("Output/"+ 'Mother.csv', 'a+', encoding='utf-8')
+    Csv = open("Output/" + 'Mother.csv', 'a+', encoding='utf-8')
     csv_writer = csv.writer(Csv)
     with open("aliexpressurl.txt") as links:
         urls = links.readlines()
@@ -527,14 +547,14 @@ def validate_user():
 # cron job in here on main function
 if __name__ == "__main__":
     currency_file = open("currency_list.txt", "r")
-    currency_list=currency_file.readlines()
-    print ("\n".join(currency_list))
+    currency_list = currency_file.readlines()
+    print("\n".join(currency_list))
     curr = input("CHOOSE THE CURRENCY FROM THE LIST ABOVE \n FOR EG: ENTER AUD FOR AUSTRALIAN DOLLAR: ")
     if Any(curr.upper() in x for x in currency_list):
         print("VALID KEYWORD")
     else:
         print(" INVALID CURRENCY DEFAULT CURRENCY (USD) IS USED")
-        curr="USD"
+        curr = "USD"
     # if validate_user():
     main(curr)
     # schedule.every(10).minutes.do(main)
