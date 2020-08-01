@@ -109,7 +109,7 @@ class AliExpressScraper:
             print("---------------------------------------")
             print(url)
             print("---------------------------------------")
-            raise
+            # raise
 
     def setcurrency(self):
 
