@@ -95,6 +95,7 @@ class AliExpressScraper:
                 if self.load_url():
                     self.show_info()
                     self.start_file_download()
+                    self.get_reviews()
                     self.successful_url.write(url + "\n")
                 else:
                     print("CAN'T LOAD URL")
@@ -108,7 +109,7 @@ class AliExpressScraper:
             print("---------------------------------------")
             print(url)
             print("---------------------------------------")
-            # raise
+            raise
 
     def setcurrency(self):
 
@@ -331,9 +332,10 @@ class AliExpressScraper:
                 break
 
     def get_reviews(self):
-        product_detail = self.driver.find_element_by_id("product-detail")
-        self.driver.execute_script("arguments[0].scrollIntoView();", product_detail)
-        rev_tab = self.driver.find_element_by_xpath('//*[@id="product-detail"]/div[1]/div/div[1]/ul/li[2]/div/span')
+        # product_detail = self.driver.find_element_by_id("product-detail")
+        # self.driver.execute_script("arguments[0].scrollIntoView();", product_detail)
+        wait(self.driver,10).until(EC.element_to_be_clickable((By.XPATH,'/html/body/div[6]/div/div[3]/div[2]/div[2]/div[1]/div/div[1]/ul/li[2]/div')))
+        rev_tab = self.driver.find_element_by_xpath('/html/body/div[6]/div/div[3]/div[2]/div[2]/div[1]/div/div[1]/ul/li[2]/div')
         rev_tab.click()
         link = self.driver.find_element_by_xpath('//*[@id="product-evaluation"]').get_attribute('src')
         self.driver.get(link)
@@ -346,8 +348,6 @@ class AliExpressScraper:
                 head, _, _ = feedback.text.partition('Helpful?')
                 csv_writer.writerow([str(self.current_url), head])
 
-        self.driver.quit()
-        quit()
         # print(reviews)
         # print(len(reviews))
         # for rev in reviews:
@@ -358,7 +358,6 @@ class AliExpressScraper:
 
         self.get_variations()
         self.get_description()
-        self.get_reviews()
 
 
         try:
@@ -413,8 +412,12 @@ class AliExpressScraper:
                             self.writer.writerow(
                                 [str(self.current_url), self.information["title"], self.information["store"], csv_color,
                                  csv_size, "NA", "NA"])
+        else:
+            self.writer.writerow(
+                [str(self.current_url), self.information["title"], self.information["store"],self.information["price"],self.information["qty"].text])
         f.write("\n\n---------DESCRIPTION-----------\n\n")
         f.write(self.information["description"])
+
 
     def start_file_download(self):
         print("DOWNLOADING IMAGES")
@@ -444,12 +447,13 @@ class AliExpressScraper:
             pass
         self.download_location = loc
         list_of_images = []
-        for img_elm in self.information["color_details"]:
-            list_of_images.append(img_elm[1].replace(".jpg_50x50", ""))
-        results = ThreadPool(5).imap_unordered(self.download_files, enumerate(list_of_images))
-        for result in results:
-            if result:
-                pass
+        if self.color_flag:
+            for img_elm in self.information["color_details"]:
+                list_of_images.append(img_elm[1].replace(".jpg_50x50", ""))
+            results = ThreadPool(5).imap_unordered(self.download_files, enumerate(list_of_images))
+            for result in results:
+                if result:
+                    pass
         # ("---------------colors------------------")
 
         # ("---------------images in desc--------------------")
