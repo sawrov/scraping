@@ -272,6 +272,8 @@ class AliExpressScraper:
         if self.color_flag and self.size_flag:
             self.price_for_size_and_colors()
 
+
+
     @staticmethod
     def reset_buttons(elements):
         for element in elements:
@@ -334,19 +336,22 @@ class AliExpressScraper:
     def get_reviews(self):
         # product_detail = self.driver.find_element_by_id("product-detail")
         # self.driver.execute_script("arguments[0].scrollIntoView();", product_detail)
-        wait(self.driver,10).until(EC.element_to_be_clickable((By.XPATH,'/html/body/div[6]/div/div[3]/div[2]/div[2]/div[1]/div/div[1]/ul/li[2]/div')))
-        rev_tab = self.driver.find_element_by_xpath('/html/body/div[6]/div/div[3]/div[2]/div[2]/div[1]/div/div[1]/ul/li[2]/div')
+        wait(self.driver,10).until(EC.element_to_be_clickable((By.XPATH,'//*[@id="product-detail"]/div[1]/div/div[1]/ul/li[2]')))
+        rev_tab = self.driver.find_element_by_xpath('//*[@id="product-detail"]/div[1]/div/div[1]/ul/li[2]')
         rev_tab.click()
         link = self.driver.find_element_by_xpath('//*[@id="product-evaluation"]').get_attribute('src')
         self.driver.get(link)
-        wait(self.driver, 5).until(EC.presence_of_element_located((By.CLASS_NAME, 'feedback-list-wrap')))
-        feedbacks = self.driver.find_elements_by_class_name('feedback-item')
-        if (len(feedbacks) > 0):
-            Csv = open("Output/" + 'Reviews.csv', 'a+', encoding='utf-8')
-            csv_writer = csv.writer(Csv)
-            for feedback in feedbacks[:10]:
-                head, _, _ = feedback.text.partition('Helpful?')
-                csv_writer.writerow([str(self.current_url), head])
+        try:
+            wait(self.driver, 2).until(EC.presence_of_element_located((By.CLASS_NAME, 'feedback-list-wrap')))
+            feedbacks = self.driver.find_elements_by_class_name('feedback-item')
+            if (len(feedbacks) > 0):
+                Csv = open("Output/" + 'Reviews.csv', 'a+', encoding='utf-8')
+                csv_writer = csv.writer(Csv)
+                for feedback in feedbacks[:10]:
+                    head, _, _ = feedback.text.partition('Helpful?')
+                    csv_writer.writerow([str(self.current_url), head])
+        except DriverExceptions.TimeoutException:
+            print(" NO REVIEWS FOUND")
 
         # print(reviews)
         # print(len(reviews))
@@ -394,8 +399,13 @@ class AliExpressScraper:
         if self.size_color_matrix_flag:
             f.write("\n\nVARIATION IN PRICES:\n")
             for i, info_list in enumerate(self.information["variation_in_size_and_color"]):
-                if self.shipping_flag: f.write(
-                    "\t FROM:" + self.information["shipping_details"][i].split(":->")[0] + "\n")
+                if self.shipping_flag:
+                    f.write("\t FROM:" + self.information["shipping_details"][i].split(":->")[0] + "\n")
+                    shipping_country = self.information["shipping_details"][i].split(":->")[0]
+                    shipping_details = self.information["shipping_details"][i].split(":->")[1]
+                else:
+                    shipping_country = "N/A"
+                    shipping_details = self.information["shipping_info_element"].text
                 for j, price in enumerate(info_list):
                     f.write("\t\t FOR COLOR: " + self.information["color_details"][j][0] + "\n")
                     csv_color = self.information["color_details"][j][0]
@@ -406,15 +416,36 @@ class AliExpressScraper:
                                     l.split("||")[1] + "\n")
                             self.writer.writerow(
                                 [str(self.current_url), self.information["title"], self.information["store"], csv_color,
-                                 csv_size, l.split("||")[0], l.split("||")[1]])
+                                 csv_size, l.split("||")[0], l.split("||")[1],shipping_country,shipping_details])
                         except AttributeError:
                             f.write("\t\t\t" + self.information["size_details"][k] + ":" + "NA\n")
                             self.writer.writerow(
                                 [str(self.current_url), self.information["title"], self.information["store"], csv_color,
-                                 csv_size, "NA", "NA"])
+                                 csv_size, "NA", "NA",shipping_country,shipping_details])
         else:
-            self.writer.writerow(
-                [str(self.current_url), self.information["title"], self.information["store"],self.information["price"],self.information["qty"].text])
+            if self.color_flag:
+                shipping_country = "N/A"
+                shipping_details = self.information["shipping_info_element"].text
+                for i, color in enumerate(self.information["color_elements"]):
+                    self.reset_buttons(self.information["color_elements"])
+                    if "selected" in self.information["track_color_selection"][i].get_attribute("class"):
+                        pass
+                    else:
+                        try:
+                            color.click()
+                            price = self.driver.find_element_by_class_name(
+                                'product-price-value').text
+                            qty = re.sub('\spieces available\s', '', self.driver.find_element_by_class_name(
+                                "product-quantity-tip").text)
+                            self.writer.writerow(
+                                [str(self.current_url), self.information["title"], self.information["store"], color.text,
+                                 "NA", price, qty, shipping_country,shipping_details])
+                        except:
+                            continue
+
+            else:
+                self.writer.writerow(
+                    [str(self.current_url), self.information["title"], self.information["store"],self.information["price"],self.information["qty"].text])
         f.write("\n\n---------DESCRIPTION-----------\n\n")
         f.write(self.information["description"])
 
