@@ -566,17 +566,19 @@ class AliScraper_GUI:
 
 
         def scrape_button(self):
-            start_scraping = tk.Button(self.root, text="START SCRAPING", command=lambda: self.main())
-            start_scraping.config(state=tk.DISABLED)
-            start_scraping.grid(row=7, column=1)
+            self.start_scraping = tk.Button(self.root, text="START SCRAPING", command=lambda: self.main())
+            self.start_scraping.config(state=tk.DISABLED)
+            self.start_scraping.grid(row=7, column=1)
 
         def checkfunc(self):
             if self.verify(self.key.get()):
-                self.verified=True
+                self.verified = True
                 print("VERIFIED")
                 self.verify_key.configure(state=tk.DISABLED)
                 self.key.configure(state=tk.DISABLED)
-                self.start_scraping.config(state=tk.ENABLED)
+                self.start_scraping.config(state=tk.NORMAL)
+                # self.start_scraping.config(state=tk.E)
+
 
             else:
                 self.verified=False
@@ -623,13 +625,14 @@ class AliScraper_GUI:
                 urls = links.readlines()
                 for url in urls:
                     try:
-                        print("TESTING URL: " + url)
-                        currency = self.dropdown_var.get()
-                        currency=currency.split(":")[0]
-                        print(currency)
-                        scrape = AliExpressScraper(folder_name, csv_writer, currency)
-                        scrape.start_scraping(url)
-                        scrape.close_session()
+                        print(self.cron_check.get())
+                        # print("TESTING URL: " + url)
+                        # currency = self.dropdown_var.get()
+                        # currency=currency.split(":")[0]
+                        # print(currency)
+                        # scrape = AliExpressScraper(folder_name, csv_writer, currency)
+                        # scrape.start_scraping(url)
+                        # scrape.close_session()
 
                     except KeyboardInterrupt:
                         try:
