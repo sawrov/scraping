@@ -18,6 +18,8 @@ from datetime import datetime
 from builtins import any as Any
 import schedule
 import csv
+import tkinter as tk
+from tkinter.filedialog import askopenfilename
 
 
 class AliExpressScraper:
@@ -272,8 +274,6 @@ class AliExpressScraper:
         if self.color_flag and self.size_flag:
             self.price_for_size_and_colors()
 
-
-
     @staticmethod
     def reset_buttons(elements):
         for element in elements:
@@ -336,7 +336,8 @@ class AliExpressScraper:
     def get_reviews(self):
         # product_detail = self.driver.find_element_by_id("product-detail")
         # self.driver.execute_script("arguments[0].scrollIntoView();", product_detail)
-        wait(self.driver,10).until(EC.element_to_be_clickable((By.XPATH,'//*[@id="product-detail"]/div[1]/div/div[1]/ul/li[2]')))
+        wait(self.driver, 10).until(
+            EC.element_to_be_clickable((By.XPATH, '//*[@id="product-detail"]/div[1]/div/div[1]/ul/li[2]')))
         rev_tab = self.driver.find_element_by_xpath('//*[@id="product-detail"]/div[1]/div/div[1]/ul/li[2]')
         rev_tab.click()
         link = self.driver.find_element_by_xpath('//*[@id="product-evaluation"]').get_attribute('src')
@@ -363,7 +364,6 @@ class AliExpressScraper:
 
         self.get_variations()
         self.get_description()
-
 
         try:
             f = open("Output/TEXT/" + str(re.sub(r'[\\/*?:"<>|]', "", str(self.information["title"])))[:50] + ".txt",
@@ -416,12 +416,12 @@ class AliExpressScraper:
                                     l.split("||")[1] + "\n")
                             self.writer.writerow(
                                 [str(self.current_url), self.information["title"], self.information["store"], csv_color,
-                                 csv_size, l.split("||")[0], l.split("||")[1],shipping_country,shipping_details])
+                                 csv_size, l.split("||")[0], l.split("||")[1], shipping_country, shipping_details])
                         except AttributeError:
                             f.write("\t\t\t" + self.information["size_details"][k] + ":" + "NA\n")
                             self.writer.writerow(
                                 [str(self.current_url), self.information["title"], self.information["store"], csv_color,
-                                 csv_size, "NA", "NA",shipping_country,shipping_details])
+                                 csv_size, "NA", "NA", shipping_country, shipping_details])
         else:
             if self.color_flag:
                 shipping_country = "N/A"
@@ -438,17 +438,18 @@ class AliExpressScraper:
                             qty = re.sub('\spieces available\s', '', self.driver.find_element_by_class_name(
                                 "product-quantity-tip").text)
                             self.writer.writerow(
-                                [str(self.current_url), self.information["title"], self.information["store"], color.text,
-                                 "NA", price, qty, shipping_country,shipping_details])
+                                [str(self.current_url), self.information["title"], self.information["store"],
+                                 color.text,
+                                 "NA", price, qty, shipping_country, shipping_details])
                         except:
                             continue
 
             else:
                 self.writer.writerow(
-                    [str(self.current_url), self.information["title"], self.information["store"],self.information["price"],self.information["qty"].text])
+                    [str(self.current_url), self.information["title"], self.information["store"],
+                     self.information["price"], self.information["qty"].text])
         f.write("\n\n---------DESCRIPTION-----------\n\n")
         f.write(self.information["description"])
-
 
     def start_file_download(self):
         print("DOWNLOADING IMAGES")
@@ -511,87 +512,137 @@ class AliExpressScraper:
             pass
 
 
-# test = "https://www.aliexpress.com/item/4000607551628.html?spm=2114.12010610.8148356.43.564e4db0e12tqe"
-# test = "https://www.aliexpress.com/item/32949506271.html?spm=a2g0o.productlist.0.0.3888e7b879Rcun&s=p&ad_pvid=202007052216005954785301924050015873321_1&algo_pvid=f893b3df-c6b9-4ebe-9a0a-8b6e8fadcd06&algo_expid=f893b3df-c6b9-4ebe-9"
-# test = "https://www.aliexpress.com/item/4001051026485.html?spm=a2g0o.productlist.0.0.7df5ccb2zZiTEB&s=p&ad_pvid=202007052248174590920487854410017043611_3&algo_pvid=2cb4a5ce-b886-4f04-95cd-9123a0bf902f&algo_expid=2cb4a5ce-b886-4f04-95cd-9123a0bf902f-2&btsid=0be3743615940144978691860e8c10&ws_ab_test=searchweb0_0,searchweb201602_,searchweb201603_"
-# test = "https://www.aliexpress.com/item/4000411592783.html?spm=a2g0o.productlist.0.0.27eae7b8SJ75f6&s=p&ad_pvid=202007092234373867627591379420003663993_1&algo_pvid=e9dfc962-ad76-406a-82c7-eba6f3c67aa5&algo_expid=e9dfc962-ad76-406a-82c7-eba6f3c67aa5-0&btsid=0ab6fab215943592771575542e867d&ws_ab_test=searchweb0_0,searchweb201602_,searchweb201603_ "
-# test = "https://www.aliexpress.com/item/4000911368854.html?spm=a2g0o.productlist.0.0.6321e7b8lZ1xNh&algo_pvid=6e318c9b-c868-44d6-b321-78c194ae8f2f&algo_expid=6e318c9b-c868-44d6-b321-78c194ae8f2f-0&btsid=0ab6d69515944368163817904e975f&ws_ab_test=searchweb0_0,searchweb201602_,searchweb201603_"
-# scrape.start_scraping(test)
+class AliScraper_GUI:
 
-def main(currency):
-    # print("COOL")
-    try:
-        f = open("debug.txt", "a+")
-    except FileNotFoundError:
-        print("file not present")
-    folder_name = str(datetime.now().strftime("%b %d %Y %H-%M"))
-    # csv file open
-    Csv = open("Output/" + 'Mother.csv', 'a+', encoding='utf-8')
-    csv_writer = csv.writer(Csv)
-    with open("aliexpressurl.txt") as links:
-        urls = links.readlines()
-        for url in urls:
-            try:
-                print("TESTING URL: " + url)
-                scrape = AliExpressScraper(folder_name, csv_writer, currency)
-                scrape.start_scraping(url)
-                scrape.close_session()
+        def __init__(self):
+            self.root = tk.Tk()
+            self.root.title("ALI EXPRESS SCRAPER")
+            self.root.geometry("550x200")
 
-            except KeyboardInterrupt:
-                try:
-                    scrape.driver.close()
-                except UException.MaxRetryError:
-                    pass
-                print("YOU QUIT THE PROGRAM")
-                quit()
-            # except DriverExceptions.
-    print("PLEASE CHECK \"Output\" DIRECTORY FOR TEXT FILES ")
+            self.verification()
+            self.currency()
+            self.cronjob()
+            self.select_file()
+            self.scrape_button()
 
+            self.root.mainloop()
+            self.verified=False
 
-def verify(key):
-    print(key)
-    score = 0
-    check_digit = key[2]
-    check_digit_count = 0
-    chunks = key.split('-')
-    for chunk in chunks:
-        if len(chunk) != 4:
-            return False
-        for char in chunk:
-            if char == check_digit:
-                check_digit_count += 1
-            score += ord(char)
-    if score == 1672 and check_digit_count == 5:
-        return True
-    return False
+        def verification(self):
+            self.label1 = tk.Label(self.root, text="ENTER THE KEY").grid(row=1, column =0)
+            self.key = tk.Entry(self.root)
+            self.key.grid(row=1, column=1)
+            self.verify_key = tk.Button(self.root, text="VERIFY KEY", command=lambda: self.checkfunc())
+            self.verify_key.grid(row=1, column=2)
+
+        def currency(self):
+            self.label2 = tk.Label(self.root, text=" SELECT A CURRENCY").grid(row=3,column=0)
+            self.currency_file = open("currency_list.txt", "r")
+            self.currency_list = self.currency_file.readlines()
+            self.currency_list = [i.strip() for i in self.currency_list]
+            self.dropdown_var = tk.StringVar(self.root)
+            self.dropdown_var.set(self.currency_list[0])
+            self.dropdown_currency = tk.OptionMenu(self.root, self.dropdown_var, *self.currency_list).grid(row=3,column=1)
+
+        def cronjob(self):
+            self.label3 = tk.Label(self.root, text="SCHEDULE A REFRESH").grid(row=4,column=0)
+            days = [str(day) + " day" for day in list(range(0,30))]
+            time = [str(hr) + " hrs" for hr in list(range(0,24))]
+            self.dropdown_day = tk.StringVar(self.root)
+            self.dropdown_day.set(days[0])
+            self.dropdown_time = tk.StringVar(self.root)
+            self.dropdown_time.set(time[0])
+
+            self.dropdown_day_item = tk.OptionMenu(self.root, self.dropdown_day, *days).grid(row=4,column=3,columnspan=1)
+            self.dropdown_time_item = tk.OptionMenu(self.root, self.dropdown_time, *time).grid(row=4,column=2,columnspan=1)
+
+            self.cron_check = tk.IntVar()
+            C1 = tk.Checkbutton(self.root, text="YES", variable=self.cron_check, onvalue=1, offvalue=0).grid(row=4, column=1)
+
+        def select_file(self):
+            self.label4 = tk.Label(self.root, text="The program looks in aliexpressurl.txt by default")
+            self.label4.grid(row=5, column=1)
+            self.select_file = tk.Button(self.root, text="LOAD URL FROM FILE", command=lambda: self.selectfile()).grid(row=6, column=1)
 
 
-def validate_user():
-    while True:
-        key = input("PLEASE ENTER A VALID KEY TO RUN THE PROGRAM:  ")
-        try:
-            if verify(key.lower()):
-                print("KEY VALID:")
-                return True
+        def scrape_button(self):
+            start_scraping = tk.Button(self.root, text="START SCRAPING", command=lambda: self.main()).grid(row=7, column=1)
+
+        def checkfunc(self):
+            if self.verify(self.key.get()):
+                self.verified=True
+                print("VERIFIED")
+                self.verify_key.configure(state=tk.DISABLED)
+                self.key.configure(state=tk.DISABLED)
             else:
-                print("INVALID KEY, PLEASE ENTER A VALID KEY TO RUN THE PROGRAM\n")
-        except IndexError:
-            print("PLEASE ENTER A VALID KEY\n")
+                self.verified=False
+                print("NOT VERIFIED")
 
+        def selectfile(self):
+            self.label4.config(text=askopenfilename())
+
+        def verify(self,key):
+            try:
+                key = key.lower()
+                score = 0
+                check_digit = key[2]
+                check_digit_count = 0
+                chunks = key.split('-')
+                for chunk in chunks:
+                    if len(chunk) != 4:
+                        return False
+                    for char in chunk:
+                        if char == check_digit:
+                            check_digit_count += 1
+                        score += ord(char)
+                if score == 1672 and check_digit_count == 5:
+                    return True
+                return False
+            except IndexError:
+                return False
+
+        def main(self):
+            try:
+                f = open("debug.txt", "a+")
+            except FileNotFoundError:
+                print("file not present")
+            folder_name = str(datetime.now().strftime("%b %d %Y %H-%M"))
+            # csv file open
+            Csv = open("Output/" + 'Mother.csv', 'a+', encoding='utf-8')
+            csv_writer = csv.writer(Csv)
+            load_url=self.label4["text"]
+            if not os.path.exists(load_url):
+                load_url="aliexpressurl.txt"
+                print("DEFAULT PATH USED")
+
+            with open(load_url) as links:
+                urls = links.readlines()
+                for url in urls:
+                    try:
+                        print("TESTING URL: " + url)
+                        currency = self.dropdown_var.get()
+                        currency=currency.split(":")[0]
+                        print(currency)
+                        scrape = AliExpressScraper(folder_name, csv_writer, currency)
+                        scrape.start_scraping(url)
+                        scrape.close_session()
+
+                    except KeyboardInterrupt:
+                        try:
+                            scrape.driver.close()
+                        except UException.MaxRetryError:
+                            pass
+                        print("YOU QUIT THE PROGRAM")
+                        quit()
+                    # except DriverExceptions.
+            print("PLEASE CHECK \"Output\" DIRECTORY FOR TEXT FILES ")
 
 # cron job in here on main function
 if __name__ == "__main__":
-    currency_file = open("currency_list.txt", "r")
-    currency_list = currency_file.readlines()
-    print("\n".join(currency_list))
-    curr = input("CHOOSE THE CURRENCY FROM THE LIST ABOVE \n FOR EG: ENTER AUD FOR AUSTRALIAN DOLLAR: ")
-    if Any(curr.upper() in x for x in currency_list):
-        print("VALID KEYWORD")
-    else:
-        print(" INVALID CURRENCY DEFAULT CURRENCY (USD) IS USED")
-        curr = "USD"
+    _=AliScraper_GUI()
+
     # if validate_user():
-    main(curr)
+    # main(curr)
     # schedule.every(10).minutes.do(main)
     # while True:
     #     schedule.run_pending()
