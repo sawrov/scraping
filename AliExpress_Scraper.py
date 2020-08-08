@@ -566,7 +566,9 @@ class AliScraper_GUI:
 
 
         def scrape_button(self):
-            start_scraping = tk.Button(self.root, text="START SCRAPING", command=lambda: self.main()).grid(row=7, column=1)
+            start_scraping = tk.Button(self.root, text="START SCRAPING", command=lambda: self.main())
+            start_scraping.config(state=tk.DISABLED)
+            start_scraping.grid(row=7, column=1)
 
         def checkfunc(self):
             if self.verify(self.key.get()):
@@ -574,6 +576,8 @@ class AliScraper_GUI:
                 print("VERIFIED")
                 self.verify_key.configure(state=tk.DISABLED)
                 self.key.configure(state=tk.DISABLED)
+                self.start_scraping.config(state=tk.ENABLED)
+
             else:
                 self.verified=False
                 print("NOT VERIFIED")
