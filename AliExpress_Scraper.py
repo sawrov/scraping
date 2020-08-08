@@ -556,8 +556,8 @@ class AliScraper_GUI:
             self.dropdown_day_item = tk.OptionMenu(self.root, self.dropdown_day, *days).grid(row=4,column=3,columnspan=1)
             self.dropdown_time_item = tk.OptionMenu(self.root, self.dropdown_time, *time).grid(row=4,column=2,columnspan=1)
 
-            self.cron_check = tk.IntVar()
-            C1 = tk.Checkbutton(self.root, text="YES", variable=self.cron_check, onvalue=1, offvalue=0).grid(row=4, column=1)
+            self.cron_check = tk.BooleanVar()
+            C1 = tk.Checkbutton(self.root, text="YES", variable=self.cron_check, onvalue=True, offvalue=False).grid(row=4, column=1)
 
         def select_file(self):
             self.label4 = tk.Label(self.root, text="The program looks in aliexpressurl.txt by default")
@@ -566,14 +566,13 @@ class AliScraper_GUI:
 
 
         def scrape_button(self):
-            self.start_scraping = tk.Button(self.root, text="START SCRAPING", command=lambda: self.main())
+            self.start_scraping = tk.Button(self.root, text="START SCRAPING", command=lambda: self.scrape())
             self.start_scraping.config(state=tk.DISABLED)
             self.start_scraping.grid(row=7, column=1)
 
         def checkfunc(self):
             if self.verify(self.key.get()):
                 self.verified = True
-                print("VERIFIED")
                 self.verify_key.configure(state=tk.DISABLED)
                 self.key.configure(state=tk.DISABLED)
                 self.start_scraping.config(state=tk.NORMAL)
@@ -607,6 +606,16 @@ class AliScraper_GUI:
             except IndexError:
                 return False
 
+        def scrape(self):
+            day = int(self.dropdown_day.get().split(" ")[0])
+            hr = int(self.dropdown_time.get().split(" ")[0])
+            total_time = day * 24 + hr
+            self.main()
+            if (self.cron_check.get()):
+                schedule.every(total_time).hours.do(self.main())
+                while True:
+                    schedule.run_pending()
+
         def main(self):
             try:
                 f = open("debug.txt", "a+")
@@ -625,14 +634,13 @@ class AliScraper_GUI:
                 urls = links.readlines()
                 for url in urls:
                     try:
-                        print(self.cron_check.get())
-                        # print("TESTING URL: " + url)
-                        # currency = self.dropdown_var.get()
-                        # currency=currency.split(":")[0]
-                        # print(currency)
-                        # scrape = AliExpressScraper(folder_name, csv_writer, currency)
-                        # scrape.start_scraping(url)
-                        # scrape.close_session()
+
+                        print("TESTING URL: " + url)
+                        currency = self.dropdown_var.get()
+                        currency=currency.split(":")[0]
+                        scrape = AliExpressScraper(folder_name, csv_writer, currency)
+                        scrape.start_scraping(url)
+                        scrape.close_session()
 
                     except KeyboardInterrupt:
                         try:
