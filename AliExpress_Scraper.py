@@ -612,7 +612,7 @@ class AliScraper_GUI:
             total_time = day * 24 + hr
             self.main()
             if (self.cron_check.get()):
-                schedule.every(total_time).hours.do(self.main())
+                schedule.every(total_time).hours.do(self.main)
                 while True:
                     schedule.run_pending()
 
