@@ -622,8 +622,13 @@ class AliScraper_GUI:
             except FileNotFoundError:
                 print("file not present")
             folder_name = str(datetime.now().strftime("%b %d %Y %H-%M"))
+
+            if os.path.exists("Output/Mother.csv"):
+                if os.path.exists("Output/Old_Mother.csv"):
+                    os.remove("Output/Old_Mother.csv")
+                os.rename(r'Output/Mother.csv',r'Output/Old_Mother.csv')
             # csv file open
-            Csv = open("Output/" + 'Mother.csv', 'a+', encoding='utf-8')
+            Csv = open("Output/" + 'Mother.csv', 'w+', encoding='utf-8')
             csv_writer = csv.writer(Csv)
             load_url=self.label4["text"]
             if not os.path.exists(load_url):
